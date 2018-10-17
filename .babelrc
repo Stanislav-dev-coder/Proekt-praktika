@@ -1,0 +1,35 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "inline-react-svg",
+      {
+        "svgo": {
+          "plugins": [
+            {
+              "removeAttrs": { "attrs": "(data-name)" }
+            },
+            {
+              "cleanupIDs": false
+            }
+          ]
+        }
+      }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "config": "./config",
+          "components": "./components",
+          "pages": "./pages",
+          "helpers": "./helpers",
+          "icons": "./icons",
+          "state": "./state"
+        }
+      }
+    ],
+    "transform-decorators-legacy"
+  ]
+}

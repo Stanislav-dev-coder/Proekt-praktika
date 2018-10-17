@@ -1,0 +1,4 @@
+.${TM:COMPONENT_NAME} {
+  & {
+  }
+}
