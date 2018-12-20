@@ -21,15 +21,21 @@
       {
         "root": ["./"],
         "alias": {
-          "config": "./config",
           "components": "./components",
+          "config": "./config",
+          "containers": "./containers",
           "pages": "./pages",
-          "helpers": "./helpers",
-          "icons": "./icons",
-          "state": "./state"
+          "store": "./store",
+          "lib": "./lib",
+          "locales": "./locales",
+          "utils": "./utils",
+          "static": "./static"
         }
       }
     ],
-    "transform-decorators-legacy"
+    [
+      "@babel/plugin-proposal-decorators",
+      { "legacy": true }
+    ]
   ]
 }

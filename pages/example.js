@@ -1,6 +1,6 @@
 // Vendor
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 
 // Components
 import AppLink from 'components/AppLink';
@@ -11,7 +11,7 @@ import AppLink from 'components/AppLink';
 // @connect(({ home }) => ({
 //   slides: home.slides,
 // }))
-export default class IndexPage extends Component {
+export default class ExamlplePage extends Component {
 	// static async getInitialProps({ store }) {
 	//   await Promise.all([
 	//     store.dispatch(getSlidesIfNotLoaded()),
@@ -21,7 +21,7 @@ export default class IndexPage extends Component {
 	render() {
 		return (
 			<div>
-				Home page <AppLink href="/example">Go to example</AppLink>
+				Example page <AppLink href="/">Back to home</AppLink>
 			</div>
 		);
 	}

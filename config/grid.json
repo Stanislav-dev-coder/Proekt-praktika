@@ -1,18 +1,18 @@
 {
-  "default": {
-    "width": 1290,
-    "gap": 30
-  },
-  "notebook": {
-    "width": 1170,
-    "gap": 30
-  },
-  "tablet": {
-    "width": 930,
-    "gap": 30
-  },
-  "verticalTablet": {
-    "width": 690,
-    "gap": 30
-  }
+	"default": {
+		"width": 1290,
+		"gap": 30
+	},
+	"notebook": {
+		"width": 1170,
+		"gap": 30
+	},
+	"tablet": {
+		"width": 930,
+		"gap": 30
+	},
+	"verticalTablet": {
+		"width": 690,
+		"gap": 30
+	}
 }

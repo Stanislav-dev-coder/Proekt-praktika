@@ -5,41 +5,41 @@ import extend from 'lodash/extend';
 
 // Request to API
 export function request(method, url, options) {
-  const {
-    data = {},
-    before = () => {},
-    success = () => {},
-    error = console.log,
-    headers = {},
-    baseURL = API_URL,
-  } = options;
+	const {
+		data = {},
+		before = () => {},
+		success = () => {},
+		error = console.log,
+		headers = {},
+		baseURL = API_URL,
+	} = options;
 
-  const params = {
-    lang: 'ru',
-  };
+	const params = {
+		lang: 'ru',
+	};
 
-  if (method === 'get') {
-    extend(params, data);
-  }
+	if (method === 'get') {
+		extend(params, data);
+	}
 
-  before();
+	before();
 
-  return axios({
-    method,
-    baseURL,
-    url,
-    headers,
-    params,
-    data: method === 'get' ? {} : data,
-  })
-    .then(response => {
-      success(response.data);
-      return response;
-    })
-    .catch(response => {
-      error(response);
-      return response;
-    });
+	return axios({
+		method,
+		baseURL,
+		url,
+		headers,
+		params,
+		data: method === 'get' ? {} : data,
+	})
+		.then(response => {
+			success(response.data);
+			return response;
+		})
+		.catch(response => {
+			error(response);
+			return response;
+		});
 }
 
 // Request method aliases
