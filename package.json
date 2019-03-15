@@ -86,6 +86,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.3.4",
 		"@babel/plugin-transform-runtime": "7.1.0",
+		"@babel/runtime": "^7.3.4",
 		"babel-loader": "^8.0.5",
 		"babel-plugin-inline-react-svg": "^0.5.2",
 		"babel-plugin-module-resolver": "^3.1.1",
