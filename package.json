@@ -6,7 +6,7 @@
 		"dev": "node server/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "next build",
-		"start": "NODE_ENV=production node server/index.js",
+		"start": "next build && NODE_ENV=production node server/index.js",
 		"precommit": "npx lint-staged",
 		"prettier": "npx prettier --write \"./**/*.{js,jsx,json}\""
 	},
@@ -28,12 +28,12 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@bitbucket.org/OlegChulakovStudio/sovcombank.frontend.git"
+		"url": "git+ssh://git@bitbucket.org/OlegChulakovStudio/chulakov.react-template.git"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"homepage": "https://bitbucket.org/OlegChulakovStudio/sovcombank.frontend#readme",
+	"homepage": "https://bitbucket.org/OlegChulakovStudio/chulakov.react-template#readme",
 	"dependencies": {
 		"@babel/plugin-proposal-decorators": "^7.2.3",
 		"@zeit/next-css": "^0.2.0",
@@ -80,14 +80,19 @@
 		"templateman": "^0.0.5",
 		"url-loader": "^1.0.1",
 		"uuid": "^3.3.2",
-		"validator": "^10.5.0"
+		"validator": "^10.5.0",
+		"webpack": "^4.29.6"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.3.4",
 		"@babel/plugin-transform-runtime": "7.1.0",
-		"babel-plugin-module-resolver": "^3.1.1",
+		"babel-loader": "^8.0.5",
 		"babel-plugin-inline-react-svg": "^0.5.2",
+		"babel-plugin-module-resolver": "^3.1.1",
 		"babel-plugin-transform-react-remove-prop-types": "0.4.19",
 		"babel-polyfill": "^6.26.0",
-		"mobile-detect": "^1.4.3"
+		"babel-preset-react": "^6.24.1",
+		"mobile-detect": "^1.4.3",
+		"path": "^0.12.7"
 	}
 }
