@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const withStylus = require('@zeit/next-stylus');
+const withCSS = require('@zeit/next-css');
 const path = require('path');
 require('dotenv').config();
 const dev = process.env.NODE_ENV !== 'production';
@@ -18,12 +19,6 @@ const config = {
 				},
 			},
 		});
-		config.plugins.push(
-			new webpack.DefinePlugin({
-				IS_PROD: !dev,
-				API_URL: JSON.stringify(process.env.API_URL),
-			}),
-		);
 		if (!dev) {
 			config.plugins.push(new CssoWebpackPlugin());
 		}
@@ -33,6 +28,10 @@ const config = {
 		import: path.resolve('styles/common.styl'),
 		use: [poststylus([require('autoprefixer')()])],
 	},
+	env: {
+		IS_PROD: !dev,
+		API_URL: process.env.API_URL,
+	},
 };
 
-module.exports = withStylus(config);
+module.exports = withCSS(withStylus(config));
