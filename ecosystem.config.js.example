@@ -1,12 +1,24 @@
-module.exports = {
-  apps: [
-    {
-      name: 'site.ru',
-      script: 'server/index.js',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 5000
-      },
+function defineServer(port) {
+  return {
+    name: 'site.ru',
+    script: 'server/index.js',
+    env: {
+      NODE_ENV: 'production',
+      PORT: port
     },
-  ],
+    env_production: {
+      NODE_ENV: 'production',
+      PORT: port
+    }
+  };
+};
+
+module.exports = {
+  /**
+   * Application configuration section
+   * http://pm2.keymetrics.io/docs/usage/application-declaration/
+   */
+  apps: [
+    defineServer(5000)
+  ]
 };

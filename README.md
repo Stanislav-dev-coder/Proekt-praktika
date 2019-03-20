@@ -11,7 +11,18 @@ cp .env.example .env
 ```
 npm install
 cp .env.example .env
-cp .ecosystem.config.js.example .ecosystem.config.js
+cp ecosystem.config.js.example ecosystem.config.js
+```
+После копирования заполните переменные окружения в файлах .env и ecosystem.config.js.
+
+Чтобы запустить несколько инстенсов: нужно в файле ecosystem.config.js продублировать вызов функции с новым портом, например:
+```
+...
+  apps: [
+    defineServer(5000),
+    defineServer(5001)
+  ]
+...
 ```
 
 # Запуск в режиме разработки
