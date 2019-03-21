@@ -32,6 +32,9 @@ const config = {
 		IS_PROD: !dev,
 		API_URL: process.env.API_URL,
 	},
+	onDemandEntries: {
+		websocketPort: process.env.HOT_RELOAD_PORT || 3010,
+	},
 };
 
 module.exports = withCSS(withStylus(config));
