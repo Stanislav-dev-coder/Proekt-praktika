@@ -1,0 +1,28 @@
+version: '2'
+services:
+  new-vhost:
+    image:  ci.chulakov.ru:5000/php7.3.3-node10.15.2 # ci.chulakov.ru:5000/php7node10
+    container_name: ${VIRTUAL_HOST}
+    restart: always
+    environment:
+      - SKIP_COMPOSER=1     # '${SKIP_COMPOSER}' #  Set to 1 to avoid installing composer
+      - SKIP_CHOWN=1
+### Domain name
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+#    ports:
+#      - 8086:80
+    volumes:
+      - ./:/var/www/html
+      - ./docker/log:/var/www/log
+      # Mount git global options and RSA keys data
+      - ~/.ssh:/root/.ssh
+      # Mount home data and composre cache
+      - ./docker/home:/root/
+      - ./docker/conf/nginx-site.conf:/etc/nginx/sites-enabled/default.conf
+    networks:
+      - ng-proxy
+
+networks:
+  ng-proxy:
+    external:
+      name: ngproxy

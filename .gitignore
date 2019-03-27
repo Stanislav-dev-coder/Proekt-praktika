@@ -19,6 +19,9 @@ yarn-debug.log*
 yarn-error.log*
 yarn.lock*
 
+package-lock.json
+package.json
+
 .next
 .env
 .vscode
@@ -26,3 +29,15 @@ yarn.lock*
 .idea
 
 ecosystem.config.js
+
+
+docker/home/*
+!.gitkeep
+
+docker/log/*	
+!.gitkeep
+
+docker/conf/nginx-site.conf
+
+docker/log/react-access.log
+
