@@ -1,16 +1,16 @@
 version: '2'
 services:
   new-vhost:
-    image:  ci.chulakov.ru:5000/php7.3.3-node10.15.2 # ci.chulakov.ru:5000/php7node10
+    image:  ci.chulakov.ru:5000/ci.chulakov.ru:5000/react.node10.15.2
     container_name: ${VIRTUAL_HOST}
     restart: always
     environment:
-      - SKIP_COMPOSER=1     # '${SKIP_COMPOSER}' #  Set to 1 to avoid installing composer
       - SKIP_CHOWN=1
 ### Domain name
       - VIRTUAL_HOST=${VIRTUAL_HOST}
-#    ports:
-#      - 8086:80
+    ports:
+      - ${HOT_RELOAD_PORT}:${HOT_RELOAD_PORT}
+      - ${PORT}:${PORT}
     volumes:
       - ./:/var/www/html
       - ./docker/log:/var/www/log
@@ -18,7 +18,6 @@ services:
       - ~/.ssh:/root/.ssh
       # Mount home data and composre cache
       - ./docker/home:/root/
-      - ./docker/conf/nginx-site.conf:/etc/nginx/sites-enabled/default.conf
     networks:
       - ng-proxy
 
