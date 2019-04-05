@@ -1,0 +1,27 @@
+version: '2'
+services:
+  new-vhost:
+    image:  ci.chulakov.ru:5000/react.node10.15.2
+    container_name: ${VIRTUAL_HOST}
+    restart: always
+    environment:
+      - SKIP_CHOWN=1
+### Domain name
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+    ports:
+      - ${HOT_RELOAD_PORT}:${HOT_RELOAD_PORT}
+      - ${PORT}:${PORT}
+    volumes:
+      - ./:/var/www/html
+      - ./docker/log:/var/www/log
+      # Mount git global options and RSA keys data
+      - ~/.ssh:/root/.ssh
+      # Mount home data and composre cache
+      - ./docker/home:/root/
+    networks:
+      - ng-proxy
+
+networks:
+  ng-proxy:
+    external:
+      name: ngproxy
