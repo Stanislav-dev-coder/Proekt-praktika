@@ -9,6 +9,9 @@ services:
 ### Domain name
       - VIRTUAL_HOST=${VIRTUAL_HOST}
       - PORT=${PORT}
+### GIT 
+      - GIT_EMAIL=${GIT_EMAIL}
+      - GIT_NAME=${GIT_NAME}
     ports:
       - ${HOT_RELOAD_PORT}:${HOT_RELOAD_PORT}
       - ${PORT}:${PORT}

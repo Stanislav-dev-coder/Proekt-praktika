@@ -11,6 +11,17 @@ MYLOCALUSR=`whoami`
 
 . .env
 
+if [ -z "$GIT_EMAIL" ]; then
+     echo "Define GIT_EMAIL and GIT_NAME variables in .env file"
+     echo $GIT_EMAIL
+     exit 1
+   fi
+   if [ -z "$GIT_NAME" ]; then
+     echo "Define GIT_EMAIL and GIT_NAME variables in .env file"
+     echo $GIT_NAME
+     exit 1
+   fi
+
 if [ ! "$(docker ps -q -f name=$VIRTUAL_HOST)" ]; then
 
     echo "WORK: Virtual host '$VIRTUAL_HOST' does not exist."
