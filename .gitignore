@@ -28,9 +28,6 @@ package.json
 .vs
 .idea
 
-ecosystem.config.js
-
-
 docker/home/*
 !.gitkeep
 
