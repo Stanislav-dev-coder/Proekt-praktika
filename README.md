@@ -1,5 +1,7 @@
 # Основная информация
 Server-side сборка на основе Next.js 8, React 16.8.4, Node.js 10
+Стили задаются с использованием препроцессора Stylus (http://stylus-lang.com).
+При написании стилей мы используем методологию БЭМ (https://ru.bem.info/methodology/quick-start).
 
 # Использование с Docker
 
@@ -77,4 +79,23 @@ pm2 startOrRestart ecosystem.config.js
 Первоначально необходимо установить расширение [Manta's Stylus Supremacy](https://marketplace.visualstudio.com/items?itemName=thisismanta.stylus-supremacy) для VS Code. Затем необходимо открыть настройки VS Code и установить значение для `stylint.stylintrcPath`: `/.stylintrc`
 
 Чтобы линтер срабатывал при сохранении и при вставке стилей, необходимо указать значение `true` для параметров `editor.formatOnSave` и `files.autoSave`
+
+# Адаптивность #
+
+Контрольные точки для адаптивности настраиваются в файлах **source/config/breakpoints.json** (для Desktop First) и **source/config/breakpoints-mf.json** (для Mobile First).
+
+Пример брекпоинта для Desktop First: наличие в файле **source/config/breakpoints.json** строчки `"notebook": 1440` добавляет в Stylus переменную `$notebook` равную `(max-width: 1440px)`.
+Эту переменную можно использовать вот так: `@media $notebook { ... }`.
+
+Пример брекпоинта для Mobile First: наличие в файле **source/config/breakpoints-mf.json** строчки `"mfNotebook": 1200` добавляет в Stylus переменную `$mfNotebook` равную `(min-width: 1200)`.
+Эту переменную можно использовать вот так: `@media $mfNotebook { ... }`.
+
+Кроме того, в медиа-запросах можно использовать переменные `$landscape` и `$portrait` (вот так: `@media $landscape { ... }`), а для Ретины используется медиа-запрос `@media $retina { ... }`
+
+
+# Цвета #
+
+Цвета указанные в файле **source/config/colors.json** доступны в Stylus как `$#NAME#Color`.
+
+Например, `linkHover` будет доступен в Stylus как `$linkHoverColor`, а в JS как `app.config.colors.linkHover`.
 
