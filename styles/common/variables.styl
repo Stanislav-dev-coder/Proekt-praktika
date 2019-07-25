@@ -19,8 +19,15 @@ for $name, $breakpoint in $breakpoints {
 	define('$' + $name + 'WithoutVerticalTablet', get-min-and-max-width($breakpoints.verticalTablet+1, $breakpoint))
 	define('$' + $name + 'WithoutPhone', get-min-and-max-width($breakpoints.phone+1, $breakpoint))
 }
+$breakpointsMf = json('../../config/breakpoints-mf.json', { hash: true })
+for $nameMf, $breakpointMf in $breakpointsMf {
+	define('$' + $nameMf, get-min-width($breakpointMf))
+}
 $withoutVerticalTablet = get-min-width($breakpoints.verticalTablet+1);
 $withoutPhone = get-min-width($breakpoints.phone+1);
+$landscape = '(orientation: landscape)'
+$portrait = '(orientation: portrait)'
+$retina = '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)'
 
 // grid
 $phoneSpaceX = 20px
