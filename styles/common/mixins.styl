@@ -54,6 +54,20 @@ cursor-grabbing() {
   cursor grabbing
 }
 
+// extend default clickable zone
+clickZone($sizeZone = 10px) {
+  position relative
+  &:before {
+    content ''
+    position absolute
+    top ($sizeZone * -1)
+    right ($sizeZone * -1)
+    left ($sizeZone * -1)
+    bottom ($sizeZone * -1)
+    cursor pointer
+  }
+}
+
 // disable last margin
 disable-last-margin() {
   &:last-child {
