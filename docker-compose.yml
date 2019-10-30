@@ -1,7 +1,7 @@
 version: '2'
 services:
   new-vhost:
-    image:  ci.chulakov.ru:5000/react.node10.15.2.pm2
+    image:  ci.chulakov.ru:5000/front.react.node10.15.2.pm2
     container_name: ${VIRTUAL_HOST}
     restart: always
     environment:
