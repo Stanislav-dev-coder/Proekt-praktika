@@ -27,14 +27,3 @@ package.json
 .vscode
 .vs
 .idea
-
-docker/home/*
-!.gitkeep
-
-docker/log/*	
-!.gitkeep
-
-docker/conf/nginx-site.conf
-
-docker/log/react-access.log
-
