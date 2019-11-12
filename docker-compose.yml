@@ -1,0 +1,40 @@
+version: '3.2'
+
+networks:
+  backend-network:
+    driver: bridge
+  web-projects:
+    external:
+       name: ${EXTERNAL_NETWORK_NAME}
+
+services:
+  # Nextjs applicaton container
+  &app-service app: &app-service-template
+    image: node:10.17-alpine
+    volumes:
+      - ./src:/app:rw
+    hostname: *app-service
+    restart: on-failure
+    environment: &app-service-envs
+      LIVERELOAD_PORT: "${LIVERELOAD_PORT}"
+    working_dir: "/app"
+    command: ["npm", "run", "dev"]
+    ports: ['3000:3000']
+    networks:
+      - backend-network
+      - web-projects
+
+  # Node.js container with NPM & Yarn & Gulp TODO. Нужно не запускать при общем up
+  &node-service node:
+    build:
+      context: ./docker/node-10.17
+      dockerfile: Dockerfile
+    environment:
+      LIVERELOAD_PORT: "${LIVERELOAD_PORT}"
+    volumes:
+      - ./src:/app:rw
+    restart: on-failure
+    hostname: *node-service
+    depends_on: []
+    networks:
+      - backend-network
