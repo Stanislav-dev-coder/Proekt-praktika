@@ -36,7 +36,7 @@ down: ## Stop all started for development containers
 	$(docker_compose_bin) down
 
 shell: ## Start shell into application container
-	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" /bin/sh
+	$(docker_compose_bin) run --rm "$(NODE_CONTAINER_NAME)" /bin/sh
 
 install: ## Install NPM packages deps
 	$(docker_compose_bin) run --workdir="/app" --rm "$(NODE_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
