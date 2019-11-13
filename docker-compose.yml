@@ -11,12 +11,13 @@ services:
   # Nextjs applicaton container
   &app-service app: &app-service-template
     image: node:10.17-alpine
+    user: ${UID}:${GUID}
     volumes:
       - ./src:/app:rw
     hostname: *app-service
     restart: on-failure
     working_dir: "/app"
-    command: ["npm", "run", "dev"]
+    command: ["yarn", "dev"]
     ports: ['3000:3000']
     networks:
       - backend-network
@@ -27,6 +28,7 @@ services:
     build:
       context: ./docker/node-10.17
       dockerfile: Dockerfile
+    user: ${UID}:${GUID}
     volumes:
       - ./src:/app:rw
     restart: on-failure

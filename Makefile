@@ -27,7 +27,7 @@ help: ## Show this help
 
 ---------------: ## ---------------
 
-up: install build ## Full build app container and start it
+up: install ## Full build app container and start it
 	$(docker_compose_bin) up -d "$(APP_CONTAINER_NAME)"
 
 down: ## Stop all started for development containers
@@ -37,7 +37,4 @@ shell: ## Start shell into application container
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" /bin/sh
 
 install: ## Install NPM packages deps
-	$(docker_compose_bin) run --workdir="/app" --rm "$(NODE_CONTAINER_NAME)" npm ci
-
-build:
-	$(docker_compose_bin) run --workdir="/app" --rm "$(NODE_CONTAINER_NAME)" npm run build
+	$(docker_compose_bin) run --workdir="/app" --rm "$(NODE_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
