@@ -28,7 +28,7 @@ services:
     build:
       context: ./docker/nginx-1.16
       dockerfile: Dockerfile
-    restart: always
+    restart: on-failure
     container_name: ${VIRTUAL_HOST}-web
     environment:
       NODE_HOST: ${VIRTUAL_HOST}-app
@@ -52,7 +52,7 @@ services:
     user: ${UID}:${GID}
     volumes:
       - ./src:/app:rw
-    restart: on-failure
+    restart: no
     depends_on: []
     networks:
       - backend-network
