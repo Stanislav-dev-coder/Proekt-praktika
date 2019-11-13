@@ -10,6 +10,7 @@ IMAGES_PREFIX := $(shell basename $(shell dirname $(realpath $(lastword $(MAKEFI
 
 APP_CONTAINER_NAME := app
 NODE_CONTAINER_NAME := node
+NGINX_CONTAINER_NAME := nginx-app
 
 docker_bin := $(shell command -v docker 2> /dev/null)
 docker_compose_bin := $(shell command -v docker-compose 2> /dev/null)
@@ -28,6 +29,7 @@ help: ## Show this help
 ---------------: ## ---------------
 
 start: ## Full build app container and start it
+	$(docker_compose_bin) up -d "$(NGINX_CONTAINER_NAME)"
 	$(docker_compose_bin) up "$(APP_CONTAINER_NAME)"
 
 down: ## Stop all started for development containers

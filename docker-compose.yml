@@ -14,13 +14,34 @@ services:
     user: ${UID}:${GID}
     volumes:
       - ./src:/app:rw
-    hostname: *app-service
+    container_name: ${VIRTUAL_HOST}-app
     restart: on-failure
     working_dir: "/app"
     command: ["yarn", "dev"]
-    ports: ['3000:3000']
+    ports: ["${PORT}:${PORT}"]
     networks:
       - backend-network
+      - web-projects
+
+  # NGINX container for PHP-FPM with Yii2 Administrative panel
+  &web-service nginx-app:
+    build:
+      context: ./docker/nginx-1.16
+      dockerfile: Dockerfile
+    restart: always
+    container_name: ${VIRTUAL_HOST}-web
+    environment:
+      NODE_HOST: ${VIRTUAL_HOST}-app
+      NODE_PORT: "${PORT}"
+      ROOT_DIR: '/app'
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      LETSENCRYPT_HOST: "${VIRTUAL_HOST}"
+    volumes:
+      - ./src:/app:ro
+#    ports: ['9991:80']
+    depends_on:
+      - *app-service
+    networks:
       - web-projects
 
   # Node.js container with NPM & Yarn & Gulp TODO. Нужно не запускать при общем up
@@ -32,7 +53,6 @@ services:
     volumes:
       - ./src:/app:rw
     restart: on-failure
-    hostname: *node-service
     depends_on: []
     networks:
       - backend-network
