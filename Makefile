@@ -27,8 +27,8 @@ help: ## Show this help
 
 ---------------: ## ---------------
 
-up: install ## Full build app container and start it
-	$(docker_compose_bin) up -d "$(APP_CONTAINER_NAME)"
+start: ## Full build app container and start it
+	$(docker_compose_bin) up "$(APP_CONTAINER_NAME)"
 
 down: ## Stop all started for development containers
 	$(docker_compose_bin) down
