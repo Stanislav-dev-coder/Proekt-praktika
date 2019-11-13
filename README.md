@@ -1,9 +1,14 @@
 # Основная информация
-Server-side сборка на основе Next.js 8, React 16.8.4, Node.js 10
+Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js 10.15
 Стили задаются с использованием препроцессора Stylus (http://stylus-lang.com).
 При написании стилей мы используем методологию БЭМ (https://ru.bem.info/methodology/quick-start).
 
 # Использование с Docker
+
+## Установка Docker
+
+Установить Docker Desktop (с сайта https://www.docker.com)
+Запустить его (авторизовываться в программе не нужно).
 
 ## Установить главный контейнер
 
@@ -11,11 +16,6 @@ Server-side сборка на основе Next.js 8, React 16.8.4, Node.js 10
 Ознакомиться с инструкцией в файле README.md этого репозитория.
 Переименовать файл `.env.example` в `.env` и указать в нем переменные
 Запустить главный контейнер командой `sh start.sh`
-
-## Установка Docker
-
-Установить Docker Desktop (с сайта https://www.docker.com)
-Запустить его (авторизовываться в программе не нужно).
 
 ## Запуск контейнера
 
@@ -32,13 +32,13 @@ Server-side сборка на основе Next.js 8, React 16.8.4, Node.js 10
 
 # Установка
 ```
-npm install
+yarn
 cp .env.example .env
 ```
 
 # Установка на сервере
 ```
-npm install
+yarn
 cp .env.example .env
 cp ecosystem.config.js.example ecosystem.config.js
 ```
@@ -56,22 +56,22 @@ cp ecosystem.config.js.example ecosystem.config.js
 
 # Запуск в режиме разработки
 ```
-npm run dev
+yarn dev
 ```
 
 # Запуск создания билда и сервера
 ```
-npm run start
+yarn start
 ```
 
 # Запуск создания билда
 ```
-npm run build
+yarn build
 ```
 
 # Запуск на сервере
 ```
-npm run build
+yarn build
 pm2 startOrRestart ecosystem.config.js
 ```
 
