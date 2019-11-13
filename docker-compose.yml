@@ -15,8 +15,6 @@ services:
       - ./src:/app:rw
     hostname: *app-service
     restart: on-failure
-    environment: &app-service-envs
-      LIVERELOAD_PORT: "${LIVERELOAD_PORT}"
     working_dir: "/app"
     command: ["npm", "run", "dev"]
     ports: ['3000:3000']
@@ -29,8 +27,6 @@ services:
     build:
       context: ./docker/node-10.17
       dockerfile: Dockerfile
-    environment:
-      LIVERELOAD_PORT: "${LIVERELOAD_PORT}"
     volumes:
       - ./src:/app:rw
     restart: on-failure
