@@ -12,6 +12,7 @@ services:
 ### GIT 
       - GIT_EMAIL=${GIT_EMAIL}
       - GIT_NAME=${GIT_NAME}
+      - NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}
     ports:
       - ${HOT_RELOAD_PORT}:${HOT_RELOAD_PORT}
       - ${PORT}:${PORT}
