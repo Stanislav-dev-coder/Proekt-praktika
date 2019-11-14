@@ -1,5 +1,17 @@
 {
-  "presets": ["next/babel"],
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": {
+          "useBuiltIns": "usage",
+          "corejs": 3
+        },
+        "transform-runtime": {},
+        "class-properties": {}
+      }
+    ]
+  ],
   "plugins": [
     [
       "inline-react-svg",
@@ -7,7 +19,9 @@
         "svgo": {
           "plugins": [
             {
-              "removeAttrs": { "attrs": "(data-name)" }
+              "removeAttrs": {
+                "attrs": "(data-name)"
+              }
             },
             {
               "cleanupIDs": false
@@ -19,7 +33,9 @@
     [
       "module-resolver",
       {
-        "root": ["./"],
+        "root": [
+          "./"
+        ],
         "alias": {
           "components": "./components",
           "config": "./config",
@@ -35,7 +51,9 @@
     ],
     [
       "@babel/plugin-proposal-decorators",
-      { "legacy": true }
+      {
+        "legacy": true
+      }
     ]
   ]
 }
