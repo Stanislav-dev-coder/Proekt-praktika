@@ -27,16 +27,18 @@ help: ## Show this help
 # --- [ Development tasks ] -------------------------------------------------------------------------------------------
 
 ---------------: ## ---------------
+up:
+	$(docker_compose_bin) up --no-recreate -d "$(NGINX_CONTAINER_NAME)"
+	$(docker_compose_bin) up --no-recreate "$(APP_CONTAINER_NAME)"
 
-start: ## Full build app container and start it
-	$(docker_compose_bin) up -d "$(NGINX_CONTAINER_NAME)"
-	$(docker_compose_bin) up "$(APP_CONTAINER_NAME)"
+dev: up ## Full build app container and start it
+	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn dev
 
 down: ## Stop all started for development containers
 	$(docker_compose_bin) down
 
 shell: ## Start shell into application container
-	$(docker_compose_bin) run --rm "$(NODE_CONTAINER_NAME)" /bin/sh
+	$(docker_compose_bin) run --rm "$(APP_CONTAINER_NAME)" /bin/sh
 
 install: ## Install NPM packages deps
 	$(docker_compose_bin) run --workdir="/app" --rm "$(NODE_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
