@@ -26,13 +26,13 @@ services:
   # NGINX container for PHP-FPM with Yii2 Administrative panel
   &web-service nginx-app:
     build:
-      context: ./docker/nginx-1.16
+      context: ./docker/nginx-proxy-1.16
       dockerfile: Dockerfile
     restart: on-failure
     container_name: ${VIRTUAL_HOST}-web
     environment:
-      NODE_HOST: ${VIRTUAL_HOST}-app
-      NODE_PORT: "${PORT}"
+      REMOTE_HOST: ${VIRTUAL_HOST}-app
+      REMOTE_PORT: "${PORT}"
       ROOT_DIR: '/app'
       VIRTUAL_HOST: "${VIRTUAL_HOST}"
       LETSENCRYPT_HOST: "${VIRTUAL_HOST}"
@@ -52,7 +52,7 @@ services:
     user: ${UID}:${GID}
     volumes:
       - ./src:/app:rw
-    restart: no
+    restart: "no"
     depends_on: []
     networks:
       - backend-network

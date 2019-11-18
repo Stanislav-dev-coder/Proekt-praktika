@@ -1,5 +1,5 @@
 FROM nginx:1.16-alpine
-LABEL Description="NGINX container for Yii2 PHP-FPM web entrypoints"
+LABEL Description="Nginx proxy service"
 
 COPY ./etc/errorpages.conf /etc/nginx/errorpages.conf
 COPY ./etc/nginx.conf /etc/nginx/nginx.conf
