@@ -9,15 +9,13 @@ IMAGES_PREFIX := $(shell basename $(shell dirname $(realpath $(lastword $(MAKEFI
 # Important: Local images naming should be in docker-compose naming style
 
 APP_CONTAINER_NAME := app
-NODE_CONTAINER_NAME := node
 NGINX_CONTAINER_NAME := nginx-app
 
 docker_bin := $(shell command -v docker 2> /dev/null)
 docker_compose_bin := $(shell command -v docker-compose 2> /dev/null)
 
-.PHONY : help up down restart \
-        shell install \
-        init
+.PHONY : help up down \
+        shell
 .DEFAULT_GOAL := help
 
 # This will output the help for each task. thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -31,14 +29,15 @@ up:
 	$(docker_compose_bin) up --no-recreate -d "$(NGINX_CONTAINER_NAME)"
 	$(docker_compose_bin) up --no-recreate "$(APP_CONTAINER_NAME)"
 
-dev: up ## Full build app container and start it
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn dev
-
 down: ## Stop all started for development containers
 	$(docker_compose_bin) down
 
-shell: ## Start shell into application container
+dev: up ## Run node in Development mode
+	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn dev
+
+start: up ## Run node in Production mode
+	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn start
+
+shell: up ## Start shell into application container
 	$(docker_compose_bin) run --rm "$(APP_CONTAINER_NAME)" /bin/sh
 
-install: ## Install NPM packages deps
-	$(docker_compose_bin) run --workdir="/app" --rm "$(NODE_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
