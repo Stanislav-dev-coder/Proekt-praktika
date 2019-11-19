@@ -1,14 +1,11 @@
 import React from 'react';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import { compose, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import thunk from 'redux-thunk';
 import handleResponseStatus from 'utils/handleResponseStatus';
 import rootReducer from '../state/';
-
-// Provides polyfills necessary for a full ES2015+ environment
-import 'babel-polyfill';
 
 import Layout from 'components/Layout';
 
@@ -19,14 +16,7 @@ if (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__) {
 }
 
 const makeStore = (initialState, options) => {
-	return createStore(
-		rootReducer,
-		initialState,
-		compose(
-			applyMiddleware(thunk),
-			devtools,
-		),
-	);
+	return createStore(rootReducer, initialState, compose(applyMiddleware(thunk), devtools));
 };
 
 @withRedux(makeStore)
@@ -46,13 +36,11 @@ export default class MyApp extends App {
 		const { Component, pageProps, status, store } = this.props;
 
 		return (
-			<Container>
-				<Provider store={store}>
-					<Layout httpStatus={status}>
-						<Component {...pageProps} />
-					</Layout>
-				</Provider>
-			</Container>
+			<Provider store={store}>
+				<Layout httpStatus={status}>
+					<Component {...pageProps} />
+				</Layout>
+			</Provider>
 		);
 	}
 }

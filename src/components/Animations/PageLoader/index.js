@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TweenMax, TimelineMax } from 'gsap';
+import { gsap } from 'gsap';
 
 import Transition from 'react-transition-group/Transition';
 
@@ -9,28 +9,27 @@ const DUR = 300;
 
 class PageLoader extends Component {
 	onEnter = node => {
-		if (this.tl) this.tl.pause().remove();
-		TweenMax.killTweensOf(node);
-		TweenMax.killTweensOf(this.line);
+		if (this.tl) this.tl.pause();
+		gsap.killTweensOf(node);
+		gsap.killTweensOf(this.line);
 
 		const duration = (this.props.duration || DUR) / 1000;
-		TweenMax.killTweensOf(node);
-		TweenMax.fromTo(node, duration, { autoAlpha: 0 }, { autoAlpha: 1 });
+		gsap.fromTo(node, duration, { autoAlpha: 0 }, { autoAlpha: 1 });
 
-		this.tl = new TimelineMax();
+		this.tl = gsap.timeline();
 		this.tl
-			.fromTo(this.line, 0.2, { x: '-100%' }, { x: '-40%', ease: Power2.easeInOut })
-			.to(this.line, 2, { x: '-10%', ease: Power0.easeNone });
+			.fromTo(this.line, 0.2, { x: '-100%' }, { x: '-40%', ease: 'power2.inOut' })
+			.to(this.line, 2, { x: '-10%', ease: 'none' });
 	};
 	onExit = node => {
-		if (this.tl) this.tl.pause().remove();
-		TweenMax.killTweensOf(node);
-		TweenMax.killTweensOf(this.line);
+		if (this.tl) this.tl.pause();
+		gsap.killTweensOf(node);
+		gsap.killTweensOf(this.line);
 
-		this.tl = new TimelineMax();
+		this.tl = gsap.timeline();
 		const duration = (this.props.duration || DUR) / 1000;
 		this.tl
-			.to(this.line, duration, { x: '0%', ease: Power2.easeInOut })
+			.to(this.line, duration, { x: '0%', ease: 'power2.inOut' })
 			.to(node, duration, { autoAlpha: 0 }, '-=0.1');
 	};
 
