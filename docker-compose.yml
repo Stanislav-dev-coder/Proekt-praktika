@@ -15,7 +15,6 @@ services:
     volumes:
       - ./src:/app:rw
     container_name: ${VIRTUAL_HOST}-app
-    restart: on-failure
     working_dir: "/app"
     ports: ["${PORT}:${PORT}"]
     networks:
