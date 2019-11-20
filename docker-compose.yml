@@ -12,6 +12,11 @@ services:
   &app-service app: &app-service-template
     image: node:10.17-alpine
     user: ${UID}:${GID}
+    environment:
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      API_URL: "${API_URL}"
+      PORT: "${PORT}"
+      NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
     volumes:
       - ./src:/app:rw
     container_name: ${VIRTUAL_HOST}-app
