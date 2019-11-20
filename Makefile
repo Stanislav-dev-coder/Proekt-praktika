@@ -26,18 +26,11 @@ help: ## Show this help
 
 ---------------: ## ---------------
 up:
-	$(docker_compose_bin) up --no-recreate -d "$(NGINX_CONTAINER_NAME)"
-	$(docker_compose_bin) up --no-recreate "$(APP_CONTAINER_NAME)"
+	$(docker_compose_bin) up --no-recreate -d
 
 down: ## Stop all started for development containers
 	$(docker_compose_bin) down
 
-dev: up ## Run node in Development mode
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn dev
-
-start: up ## Run node in Production mode
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn start
-
 shell: up ## Start shell into application container
-	$(docker_compose_bin) run --rm "$(APP_CONTAINER_NAME)" /bin/sh
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" /bin/sh
 

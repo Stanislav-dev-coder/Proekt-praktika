@@ -17,6 +17,8 @@ services:
       API_URL: "${API_URL}"
       PORT: "${PORT}"
       NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
+    # for keep alive container
+    command: ["tail", "-f", "/dev/null"]
     volumes:
       - ./src:/app:rw
     container_name: ${VIRTUAL_HOST}-app
