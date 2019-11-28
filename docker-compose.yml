@@ -2,6 +2,11 @@ version: '2'
 services:
   new-vhost:
     image:  ci.chulakov.ru:5000/front.react.node10.15.2.pm2
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
     container_name: ${VIRTUAL_HOST}
     restart: always
     environment:
@@ -23,6 +28,7 @@ services:
       - ~/.ssh:/root/.ssh
       # Mount home data and composre cache
       - ./docker/home:/root/
+      - ./docker/conf/default.conf:/etc/nginx/sites-available/default.conf
     networks:
       - ng-proxy
 

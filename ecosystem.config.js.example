@@ -15,16 +15,12 @@ function defineServer(port) {
 	};
 }
 
-const portsArray = process.env.PROD_PORTS.trim().split(',');
-console.log('portsArray', portsArray);
-
 module.exports = {
 	/**
 	 * Application configuration section
 	 * http://pm2.keymetrics.io/docs/usage/application-declaration/
 	 */
-	apps: portsArray.map(function(port) {
-		console.log('port', port);
-		return defineServer(port);
-	}),
+	apps: [
+		defineServer(process.env.PORT)
+	],
 };
