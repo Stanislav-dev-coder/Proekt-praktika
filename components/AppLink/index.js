@@ -77,7 +77,7 @@ export class AppLink extends Component {
 AppLink.propTypes = {
 	children: PropTypes.node,
 	href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-	classNane: PropTypes.string,
+	className: PropTypes.string,
 	onClick: PropTypes.func,
 	external: PropTypes.bool,
 	targetBlank: PropTypes.bool,
