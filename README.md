@@ -15,7 +15,7 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 Склонировать на рабочий компьютер репозиторий: `git clone git@bitbucket.org:OlegChulakovStudio/development.main.git`
 Ознакомиться с инструкцией в файле README.md этого репозитория.
 Переименовать файл `.env.example` в `.env` и указать в нем переменные
-Запустить главный контейнер командой `sh start.sh`
+Запустить главный контейнер командой `sh start-me.sh`
 
 ## Запуск контейнера
 
