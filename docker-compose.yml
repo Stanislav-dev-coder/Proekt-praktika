@@ -10,7 +10,7 @@ networks:
 services:
   # Nextjs applicaton container
   &app-service app: &app-service-template
-    image: node:10.17-alpine
+    image: ci.chulakov.ru:5000/chulakov/node:latest
     user: ${UID}:${GID}
     environment:
       VIRTUAL_HOST: "${VIRTUAL_HOST}"
@@ -30,9 +30,12 @@ services:
 
   # NGINX container with proxy
   &web-service nginx-app:
-    build:
-      context: ./docker/nginx-proxy-1.16
-      dockerfile: Dockerfile
+    image: ci.chulakov.ru:5000/chulakov/nginx-proxy:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
     restart: on-failure
     container_name: ${VIRTUAL_HOST}-web
     environment:
