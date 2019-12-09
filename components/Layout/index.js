@@ -15,93 +15,93 @@ import '../../styles/document.styl';
 import './style.styl';
 
 const formatTitle = title => {
-	const siteName = 'Site';
-	if (title) {
-		return `${title} - ${siteName}`;
-	}
-	return siteName;
+  const siteName = 'Site';
+  if (title) {
+    return `${title} - ${siteName}`;
+  }
+  return siteName;
 };
 
 class Layout extends Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			renderError: false,
-		};
-	}
-	componentDidMount() {
-		window.scrollTo(0, 0);
+    this.state = {
+      renderError: false,
+    };
+  }
+  componentDidMount() {
+    window.scrollTo(0, 0);
 
-		addTabularEvents();
+    addTabularEvents();
 
-		Router.router.events.on('routeChangeStart', () => {
-			this.setState({ routeChanging: true });
-		});
-		Router.router.events.on('routeChangeComplete', () => {
-			this.setState({ routeChanging: false });
-			// Скрол при смене url
-			window.scrollTo(0, 0);
-		});
-	}
+    Router.router.events.on('routeChangeStart', () => {
+      this.setState({ routeChanging: true });
+    });
+    Router.router.events.on('routeChangeComplete', () => {
+      this.setState({ routeChanging: false });
+      // Скрол при смене url
+      window.scrollTo(0, 0);
+    });
+  }
 
-	componentWillUnmount() {
-		removeTabularEvents();
-	}
+  componentWillUnmount() {
+    removeTabularEvents();
+  }
 
-	componentDidCatch() {
-		this.setState({
-			renderError: true,
-		});
-	}
+  componentDidCatch() {
+    this.setState({
+      renderError: true,
+    });
+  }
 
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.renderError) {
-			this.setState({
-				renderError: false,
-			});
-		}
-	}
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.renderError) {
+      this.setState({
+        renderError: false,
+      });
+    }
+  }
 
-	getHttpStatus() {
-		return this.state.renderError ? 'Упс! Что-то пошло не так...' : this.props.httpStatus;
-	}
+  getHttpStatus() {
+    return this.state.renderError ? 'Упс! Что-то пошло не так...' : this.props.httpStatus;
+  }
 
-	render() {
-		const { className, children, title } = this.props;
-		const classNames = cn('Layout', className);
-		const httpStatus = this.getHttpStatus();
+  render() {
+    const { className, children, title } = this.props;
+    const classNames = cn('Layout', className);
+    const httpStatus = this.getHttpStatus();
 
-		return (
-			<div className={classNames}>
-				<Head>
-					<title>{formatTitle(title)}</title>
-				</Head>
-				<PageLoader in={this.state.routeChanging} />
-				{/* <Header /> */}
-				<main className="Layout__content">
-					{httpStatus === 200 ? children : <ErrorPage httpStatus={httpStatus} />}
-				</main>
-				{/* <Footer /> */}
-			</div>
-		);
-	}
+    return (
+      <div className={classNames}>
+        <Head>
+          <title>{formatTitle(title)}</title>
+        </Head>
+        <PageLoader in={this.state.routeChanging} />
+        {/* <Header /> */}
+        <main className="Layout__content">
+          {httpStatus === 200 ? children : <ErrorPage httpStatus={httpStatus} />}
+        </main>
+        {/* <Footer /> */}
+      </div>
+    );
+  }
 }
 
 Layout.defaultProps = {
-	className: '',
-	title: '',
-	navCategory: 'individuals',
-	animated: false,
+  className: '',
+  title: '',
+  navCategory: 'individuals',
+  animated: false,
 };
 
 Layout.propTypes = {
-	className: PropTypes.string,
-	children: PropTypes.node.isRequired,
-	navCategory: PropTypes.string,
-	title: PropTypes.string,
-	animated: PropTypes.bool,
-	httpStatus: PropTypes.number,
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  navCategory: PropTypes.string,
+  title: PropTypes.string,
+  animated: PropTypes.bool,
+  httpStatus: PropTypes.number,
 };
 
 export default Layout;

@@ -4,13 +4,13 @@ import React, { Component } from 'react';
 import ErrorPage from 'components/ErrorPage';
 
 export default class Error extends Component {
-	static async getInitialProps({ res, err }) {
-		const httpStatus = res ? res.statusCode : err ? err.statusCode || err.status : null;
+  static async getInitialProps({ res, err }) {
+    const httpStatus = res ? res.statusCode : err ? err.statusCode || err.status : null;
 
-		return { httpStatus };
-	}
+    return { httpStatus };
+  }
 
-	render() {
-		return <ErrorPage httpStatus={this.props.httpStatus} />;
-	}
+  render() {
+    return <ErrorPage httpStatus={this.props.httpStatus} />;
+  }
 }

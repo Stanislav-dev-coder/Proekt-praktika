@@ -12,17 +12,17 @@ import AppLink from 'components/AppLink';
 //   slides: home.slides,
 // }))
 export default class IndexPage extends Component {
-	// static async getInitialProps({ store }) {
-	//   await Promise.all([
-	//     store.dispatch(getSlidesIfNotLoaded()),
-	//   ]);
-	// }
+  // static async getInitialProps({ store }) {
+  //   await Promise.all([
+  //     store.dispatch(getSlidesIfNotLoaded()),
+  //   ]);
+  // }
 
-	render() {
-		return (
-			<div>
-				Home page <AppLink href="/example">Go to example</AppLink>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div>
+        Home page <AppLink href="/example">Go to example</AppLink>
+      </div>
+    );
+  }
 }

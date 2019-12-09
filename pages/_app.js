@@ -12,35 +12,35 @@ import Layout from 'components/Layout';
 let devtools = func => func;
 
 if (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__) {
-	devtools = window.__REDUX_DEVTOOLS_EXTENSION__();
+  devtools = window.__REDUX_DEVTOOLS_EXTENSION__();
 }
 
 const makeStore = (initialState, options) => {
-	return createStore(rootReducer, initialState, compose(applyMiddleware(thunk), devtools));
+  return createStore(rootReducer, initialState, compose(applyMiddleware(thunk), devtools));
 };
 
 @withRedux(makeStore)
 export default class MyApp extends App {
-	static async getInitialProps({ Component, router, ctx }) {
-		const { store, isServer, req, res, asPath } = ctx;
+  static async getInitialProps({ Component, router, ctx }) {
+    const { store, isServer, req, res, asPath } = ctx;
 
-		return await handleResponseStatus({
-			promise: Promise.all([
-				Component.getInitialProps ? Component.getInitialProps(ctx).catch(e => e) : undefined,
-			]),
-			serverRes: res,
-		});
-	}
+    return await handleResponseStatus({
+      promise: Promise.all([
+        Component.getInitialProps ? Component.getInitialProps(ctx).catch(e => e) : undefined,
+      ]),
+      serverRes: res,
+    });
+  }
 
-	render() {
-		const { Component, pageProps, status, store } = this.props;
+  render() {
+    const { Component, pageProps, status, store } = this.props;
 
-		return (
-			<Provider store={store}>
-				<Layout httpStatus={status}>
-					<Component {...pageProps} />
-				</Layout>
-			</Provider>
-		);
-	}
+    return (
+      <Provider store={store}>
+        <Layout httpStatus={status}>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
+    );
+  }
 }
