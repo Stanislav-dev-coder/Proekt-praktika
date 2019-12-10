@@ -50,7 +50,8 @@
         "explicitSpread": "enforce",
         "exceptions": ["Field"]
       }
-    ]
+    ],
+    "react/require-default-props": "warn"
   },
   "settings": {
     "react": {
