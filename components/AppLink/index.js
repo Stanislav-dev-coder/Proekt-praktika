@@ -5,31 +5,7 @@ import { useRouter } from 'next/router';
 import isModifiedEvent from 'utils/isModifiedEvent';
 import isExternalUrl from 'utils/isExternalUrl';
 
-const propTypes = {
-  children: PropTypes.any,
-  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  targetBlank: PropTypes.bool,
-  download: PropTypes.bool,
-  disabled: PropTypes.bool,
-  routerParams: PropTypes.object,
-  className: PropTypes.string,
-  onClick: PropTypes.func,
-};
-
-/** @typedef {{
- *    children: any,
- *    href: string,
- *    targetBlank: boolean,
- *    download: boolean,
- *    disabled: boolean,
- *    routerParams: object,
- *    className: string,
- *    onClick: (e: MouseEvent) => boolean | void
- * }} PropsStruct
- *
- * @constant
- * @type {(props: PropsStruct) => React.ForwardRefExoticComponent}
- */
+/** @type {(props: AppLink.propTypes) => React.ForwardRefExoticComponent} */
 const AppLink = React.forwardRef(
   ({ children, href, targetBlank, download, disabled, routerParams, className, onClick }, ref) => {
     const nextRouter = useRouter();
@@ -95,7 +71,17 @@ const AppLink = React.forwardRef(
 
 AppLink.displayName = 'AppLink';
 
-AppLink.propTypes = propTypes;
+AppLink.propTypes = {
+  children: PropTypes.any,
+  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  targetBlank: PropTypes.bool,
+  download: PropTypes.bool,
+  disabled: PropTypes.bool,
+  routerParams: PropTypes.object,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+};
+
 AppLink.defaultProps = {
   children: null,
   href: null,

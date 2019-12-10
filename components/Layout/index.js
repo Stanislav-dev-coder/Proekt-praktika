@@ -93,6 +93,7 @@ Layout.defaultProps = {
   title: '',
   navCategory: 'individuals',
   animated: false,
+  httpStatus: 200,
 };
 
 Layout.propTypes = {

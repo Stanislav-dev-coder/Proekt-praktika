@@ -8,9 +8,7 @@ const propTypes = {
   httpStatus: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-/** @typedef {{ httpStatus: number| string }} PropsStruct
- * @constant
- * @type {(props: PropsStruct) => React.ForwardRefExoticComponent} */
+/** @type {(props: ErrorPage.propTypes) => React.ForwardRefExoticComponent} */
 const ErrorPage = React.forwardRef(({ httpStatus }, ref) => {
   const is404 = httpStatus === 404;
 
