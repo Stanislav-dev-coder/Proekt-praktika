@@ -1,100 +1,110 @@
-import React, { Component } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Router } from 'server/routes';
+import { useRouter } from 'next/router';
+import isModifiedEvent from 'utils/isModifiedEvent';
+import isExternalUrl from 'utils/isExternalUrl';
 
-export class AppLink extends Component {
-  linkRef = React.createRef();
+const propTypes = {
+  children: PropTypes.any,
+  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  targetBlank: PropTypes.bool,
+  download: PropTypes.bool,
+  disabled: PropTypes.bool,
+  routerParams: PropTypes.object,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+};
 
-  isModifiedEvent = event => {
-    return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-  };
+/** @typedef {{
+ *    children: any,
+ *    href: string,
+ *    targetBlank: boolean,
+ *    download: boolean,
+ *    disabled: boolean,
+ *    routerParams: object,
+ *    className: string,
+ *    onClick: (e: MouseEvent) => boolean | void
+ * }} PropsStruct
+ *
+ * @constant
+ * @type {(props: PropsStruct) => React.ForwardRefExoticComponent}
+ */
+const AppLink = React.forwardRef(
+  ({ children, href, targetBlank, download, disabled, routerParams, className, onClick }, ref) => {
+    const nextRouter = useRouter();
+    const isExternal = useMemo(() => targetBlank || isExternalUrl(href), [href, targetBlank]);
+    const link = useMemo(() => {
+      /** @type {string} */
+      let linkHref = href;
 
-  onClick = e => {
-    // для открытия ссылки в новом окне
-    const { external, targetBlank, href, params, disabled } = this.props;
-
-    if (disabled) return;
-
-    const isExternal = external || href.indexOf('://') >= 0;
-
-    if (this.props.onClick(e) === false) {
-      // отмена перехода по ссылке
-      return;
-    }
-
-    if (!isExternal) {
-      if (
-        !e.defaultPrevented && // onClick prevented default
-        e.button === 0 && // ignore everything but left clicks
-        !targetBlank && // let browser handle "target=_blank" etc.
-        !this.isModifiedEvent(e) // ignore clicks with modifier keys
-      ) {
-        e.preventDefault();
-        Router.pushRoute(href, params);
+      // Обработка хэшей в ссылке
+      if (linkHref && linkHref[0] === '#') {
+        linkHref = nextRouter.asPath.replace(/#.*/g, '') + href.match(/#.*$/g)[0];
       }
-    }
-  };
 
-  getUrl = (href = {}) => (typeof href === 'string' ? href : getBackLink(href));
+      return {
+        href: linkHref,
+        target: isExternal ? '_blank' : null,
+        rel: isExternal ? 'nofollow noopener' : null,
+      };
+    }, [href, isExternal, nextRouter.asPath]);
 
-  render() {
-    const {
-      className,
-      children,
-      href,
-      onClick,
-      external,
-      targetBlank,
-      download,
-      params,
-      targetLink,
-      disabled,
-      ...otherProps
-    } = this.props;
-
-    const componentProps = {
-      target: targetBlank ? '_blank' : undefined,
-      rel: targetBlank ? 'nofollow noopener' : undefined,
-      download: download ? true : undefined,
-    };
-    const link = targetLink === '' ? href : targetLink;
+    /** Слушатель события клика.
+     * @constant
+     * @type {(e: MouseEvent) => void}
+     */
+    const onClickHandler = useCallback(
+      e => {
+        // отмена перехода по ссылке
+        // onClick всегда должен быть первым
+        if (
+          onClick(e) === false ||
+          !link.href ||
+          disabled ||
+          download ||
+          isExternal ||
+          e.defaultPrevented ||
+          e.button !== 0 ||
+          isModifiedEvent(e)
+        ) {
+          return;
+        } else {
+          e.preventDefault();
+          Router.pushRoute(link.href, routerParams);
+        }
+      },
+      [disabled, download, link.href, isExternal, onClick, routerParams],
+    );
 
     return (
       <a
-        {...otherProps}
-        {...componentProps}
-        href={!disabled ? link : undefined}
+        ref={ref}
+        href={link.href}
+        rel={link.rel}
+        target={link.target}
         disabled={disabled}
         className={className}
-        onClick={targetBlank || download ? onClick : this.onClick}
-        ref={this.linkRef}
+        onClick={onClickHandler}
       >
         {children}
       </a>
     );
-  }
-}
+  },
+);
 
-AppLink.propTypes = {
-  children: PropTypes.node,
-  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  className: PropTypes.string,
-  onClick: PropTypes.func,
-  external: PropTypes.bool,
-  targetBlank: PropTypes.bool,
-  params: PropTypes.object,
-  targetLink: PropTypes.string,
-};
+AppLink.displayName = 'AppLink';
 
+AppLink.propTypes = propTypes;
 AppLink.defaultProps = {
-  href: '/',
-  className: '',
-  onClick: () => true,
-  external: false,
+  children: null,
+  href: null,
   targetBlank: false,
-  children: '',
-  params: {},
-  targetLink: '',
+  download: false,
+  disabled: false,
+  routerParams: {},
+  className: null,
+  onClick: () => true,
 };
 
 export default AppLink;
