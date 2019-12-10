@@ -2,6 +2,7 @@ import React from 'react';
 
 // Components
 import AppLink from 'components/AppLink';
+import ErrorPage from 'components/ErrorPage';
 
 const Component = ({ children }) => <div style={{ marginBottom: '8px' }}>{children}</div>;
 const Section = ({ title, children }) => (
@@ -39,6 +40,21 @@ function KitPage() {
         </Component>
         <Component>
           <AppLink href="#qwe2?asd=123">Hash + get properties</AppLink>
+        </Component>
+      </Section>
+
+      <Section title="ErrorPage">
+        <Component>
+          <h3>No httpStatus</h3>
+          <ErrorPage />
+        </Component>
+        <Component>
+          <h3>404</h3>
+          <ErrorPage httpStatus={404} />
+        </Component>
+        <Component>
+          <h3>500</h3>
+          <ErrorPage httpStatus={500} />
         </Component>
       </Section>
     </div>

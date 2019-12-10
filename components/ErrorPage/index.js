@@ -5,18 +5,18 @@ import PropTypes from 'prop-types';
 import './styles.styl';
 
 const propTypes = {
-  httpStatus: PropTypes.number.isRequired,
+  httpStatus: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-/** @typedef {{ httpStatus: number }} PropsStruct
+/** @typedef {{ httpStatus: number| string }} PropsStruct
  * @constant
  * @type {(props: PropsStruct) => React.ForwardRefExoticComponent} */
-const ErrorPage = React.forwardRef(({ httpStatus }) => {
+const ErrorPage = React.forwardRef(({ httpStatus }, ref) => {
   const is404 = httpStatus === 404;
 
   return (
-    <div className="ErrorPage">
-      {this.props.httpStatus}
+    <div ref={ref} className="ErrorPage">
+      {httpStatus}
       {is404 && (
         <p className="ErrorPage__message">К&nbsp;сожалению, такая страница не&nbsp;найдена</p>
       )}
