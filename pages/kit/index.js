@@ -36,14 +36,6 @@ function KitPage() {
           <AppLink href="/">Go to /home</AppLink>
         </Component>
         <Component>
-          <AppLink href="/example">Go to /example</AppLink>
-        </Component>
-        <Component>
-          <AppLink href="/example" targetBlank>
-            Target /example
-          </AppLink>
-        </Component>
-        <Component>
           <AppLink href={null}>null</AppLink>
         </Component>
         <Component>
