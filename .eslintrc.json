@@ -42,12 +42,15 @@
     "no-unneeded-ternary": ["error", { "defaultAssignment": false }],
     "prefer-template": "error",
     "indent": "off",
-    "react/jsx-props-no-spreading": ["error", {
-      "html": "enforce",
-      "custom": "enforce",
-      "explicitSpread": "enforce",
-      "exceptions": ["Field"]
-    }]
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "html": "enforce",
+        "custom": "enforce",
+        "explicitSpread": "enforce",
+        "exceptions": ["Field"]
+      }
+    ]
   },
   "settings": {
     "react": {
