@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 // Components
 import AppLink from 'components/AppLink';
 import ErrorPage from 'components/ErrorPage';
-import Fade from 'components/Animations/Fade';
+import { Fade, Slide } from 'components/Animations';
 
 // Styles
 import './styles.styl';
 
 const Component = ({ children }) => <div style={{ marginBottom: '8px' }}>{children}</div>;
-const Section = ({ title, children }) => (
-  <section>
+const Section = ({ title, children, style }) => (
+  <section style={style}>
     <h2>{title}</h2>
     {children}
   </section>
@@ -18,12 +18,13 @@ const Section = ({ title, children }) => (
 
 function KitPage() {
   const [isOpenFade, showFade] = useState(false);
+  const [isOpenSlide, showSlide] = useState(false);
 
   useEffect(() => {
-    document.body.classList.add('kit-page');
+    document.documentElement.classList.add('kit-page');
 
     return () => {
-      document.body.classList.remove('kit-page');
+      document.documentElement.classList.remove('kit-page');
     };
   }, []);
 
@@ -73,6 +74,30 @@ function KitPage() {
             <li>Link 4</li>
           </ul>
         </Fade>
+      </Section>
+
+      <Section title="Slide" style={{ minHeight: '280px' }}>
+        <button type="button" onClick={() => showSlide(!isOpenSlide)}>
+          Change Fade state
+        </button>
+
+        <Slide in={isOpenSlide} duration={350}>
+          <ul style={{ position: 'absolute' }}>
+            <li>Link 1</li>
+            <li>Link 2</li>
+            <li>Link 3</li>
+            <li>Link 4</li>
+          </ul>
+        </Slide>
+
+        <Slide in={isOpenSlide} duration={350} stagger={30}>
+          <ul style={{ position: 'absolute', right: 20 }}>
+            <li className="anim-slideItem">Link 1</li>
+            <li className="anim-slideItem">Link 2</li>
+            <li className="anim-slideItem">Link 3</li>
+            <li className="anim-slideItem">Link 4</li>
+          </ul>
+        </Slide>
       </Section>
     </div>
   );
