@@ -5,7 +5,17 @@ import { gsap } from 'gsap';
 // Components
 import Transition from 'react-transition-group/Transition';
 
-/** @type {(props: Slide.propTypes) => React.Component}
+const DEFAULT_STYLE = {
+  opacity: 0,
+};
+
+/** Анимация появления списка.
+ *
+ * Для stagger эффекта у дочерних элементов должен
+ * быть класс `.anim-slideItem`, который можно переназначить
+ * пропсом - staggerClass
+ *
+ * @type {(props: Slide.propTypes) => React.Component}
  * @example
  * <Slide in={isOpenSlide} duration={350} stagger={30}>
  *      <ul>
@@ -14,16 +24,16 @@ import Transition from 'react-transition-group/Transition';
  *        ...
  * </Slide>
  */
-const Slide = ({ in: inProp, duration, stagger, children }) => {
+const Slide = ({ in: inProp, duration, staggerDuration, staggerClass, children, className }) => {
   const durationInSeconds = duration / 1000;
-  const stagerInSeconds = stagger / 1000;
+  const stagerDurationInSeconds = staggerDuration / 1000;
 
   /** Открытие слайда.
    * @type {(node: Node) => void}
    */
   const onEnter = useCallback(
     node => {
-      const slideItems = node.querySelectorAll('.anim-slideItem');
+      const slideItems = node.querySelectorAll(`.${staggerClass}`);
       const reverseItems = Array.prototype.map.call(slideItems, item => item).reverse();
 
       gsap.killTweensOf(node);
@@ -42,18 +52,18 @@ const Slide = ({ in: inProp, duration, stagger, children }) => {
           {
             y: -15,
             opacity: 0,
-            stagger: stagerInSeconds,
+            stagger: stagerDurationInSeconds,
           },
           {
             y: 0,
             opacity: 1,
             ease: 'power1.easeOut',
-            stagger: stagerInSeconds,
+            stagger: stagerDurationInSeconds,
           },
         );
       }
     },
-    [durationInSeconds, stagerInSeconds],
+    [durationInSeconds, stagerDurationInSeconds, staggerClass],
   );
 
   /** Закрытие слайда.
@@ -67,30 +77,11 @@ const Slide = ({ in: inProp, duration, stagger, children }) => {
     [durationInSeconds],
   );
 
-  /** Обработчик выполняющийся после открытиея слайда.
-   * @type {(node: Node) => void}
-   */
-  const onEntered = useCallback(node => {
-    const slideItems = node.querySelectorAll('.anim-slideItem');
-
-    gsap.set(node, { clearProps: 'height, opacity' });
-
-    if (slideItems.length) {
-      gsap.set(slideItems, { clearProps: 'transform, opacity' });
-    }
-  }, []);
-
   return (
-    <Transition
-      in={inProp}
-      timeout={duration}
-      unmountOnExit
-      mountOnEnter
-      onEnter={onEnter}
-      onExit={onExit}
-      onEntered={onEntered}
-    >
-      {children}
+    <Transition in={inProp} timeout={duration} mountOnEnter onEnter={onEnter} onExit={onExit}>
+      <div className={className} style={DEFAULT_STYLE}>
+        {children}
+      </div>
     </Transition>
   );
 };
@@ -98,14 +89,18 @@ const Slide = ({ in: inProp, duration, stagger, children }) => {
 Slide.propTypes = {
   in: PropTypes.bool,
   duration: PropTypes.number,
-  stagger: PropTypes.number,
+  staggerDuration: PropTypes.number,
   children: PropTypes.any.isRequired,
+  staggerClass: PropTypes.string,
+  className: PropTypes.string,
 };
 
 Slide.defaultProps = {
   in: false,
   duration: 300,
-  stagger: 30,
+  staggerDuration: 30,
+  staggerClass: 'anim-slideItem',
+  className: null,
 };
 
 export default Slide;

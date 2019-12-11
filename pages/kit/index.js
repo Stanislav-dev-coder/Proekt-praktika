@@ -90,7 +90,7 @@ function KitPage() {
           </ul>
         </Slide>
 
-        <Slide in={isOpenSlide} duration={350} stagger={30}>
+        <Slide in={isOpenSlide} duration={350} stagerDuration={30}>
           <ul style={{ position: 'absolute', right: 20 }}>
             <li className="anim-slideItem">Link 1</li>
             <li className="anim-slideItem">Link 2</li>

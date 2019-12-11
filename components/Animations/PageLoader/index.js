@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { gsap } from 'gsap';
 
@@ -10,7 +10,7 @@ import './styles.styl';
 const PageLoader = ({ in: inProp, duration }) => {
   const loaderRef = useRef();
   const lineRef = useRef();
-  const durationInSeconds = useMemo(() => duration / 1000, [duration]);
+  const durationInSeconds = duration / 1000;
 
   /** @type {(node: Node) => void} */
   const killTweens = useCallback(() => {
