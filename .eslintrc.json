@@ -3,7 +3,6 @@
   "parserOptions": {
     "ecmaVersion": 2018,
     "ecmaFeatures": {
-      "legacyDecorators": true,
       "jsx": true
     },
     "sourceType": "module"
@@ -48,7 +47,7 @@
         "html": "enforce",
         "custom": "enforce",
         "explicitSpread": "enforce",
-        "exceptions": ["Field"]
+        "exceptions": ["Field", "Component"]
       }
     ],
     "react/require-default-props": "warn"

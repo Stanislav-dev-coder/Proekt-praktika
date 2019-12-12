@@ -1,35 +1,23 @@
-// Vendor
 import React, { Component } from 'react';
-import Head from 'next/head';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Router from 'next/router';
 import { addTabularEvents, removeTabularEvents } from 'utils/tabularEvents';
 
-import PageLoader from 'components/Animations/PageLoader';
+// Componenst
 import ErrorPage from 'components/ErrorPage';
+import PageLoader from 'components/Animations/PageLoader';
 
-// Root Styles
-import '../../styles/document.styl';
 // Styles
+import '../../styles/document.styl';
 import './style.styl';
 
-const formatTitle = title => {
-  const siteName = 'Site';
-  if (title) {
-    return `${title} - ${siteName}`;
-  }
-  return siteName;
-};
-
 class Layout extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    routeChanging: false,
+    isRenderError: false,
+  };
 
-    this.state = {
-      renderError: false,
-    };
-  }
   componentDidMount() {
     window.scrollTo(0, 0);
 
@@ -38,10 +26,10 @@ class Layout extends Component {
     Router.router.events.on('routeChangeStart', () => {
       this.setState({ routeChanging: true });
     });
+
     Router.router.events.on('routeChangeComplete', () => {
       this.setState({ routeChanging: false });
-      // Скрол при смене url
-      window.scrollTo(0, 0);
+      window.scrollTo(0, 0); // Скрол при смене url
     });
   }
 
@@ -51,58 +39,53 @@ class Layout extends Component {
 
   componentDidCatch() {
     this.setState({
-      renderError: true,
+      isRenderError: true,
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.renderError) {
+  componentDidUpdate(_prevProps, prevState) {
+    if (prevState.isRenderError) {
       this.setState({
-        renderError: false,
+        isRenderError: false,
       });
     }
   }
 
-  getHttpStatus() {
-    return this.state.renderError ? 'Упс! Что-то пошло не так...' : this.props.httpStatus;
+  /** Получение статуса ошибки с учетом ошибки в JS.
+   * @return {{ isSuccessful: boolean, statusCode: number }}
+   */
+  getPageStatus() {
+    return {
+      isSuccessful: !this.state.isRenderError && this.props.isSuccessful,
+      statusCode: this.state.isRenderError ? 418 : this.props.statusCode,
+    };
   }
 
   render() {
-    const { className, children, title } = this.props;
-    const classNames = cn('Layout', className);
-    const httpStatus = this.getHttpStatus();
+    const { children, className } = this.props;
+    const { isSuccessful, statusCode } = this.getPageStatus();
 
     return (
-      <div className={classNames}>
-        <Head>
-          <title>{formatTitle(title)}</title>
-        </Head>
+      <div className={cn('Layout', className)}>
         <PageLoader in={this.state.routeChanging} />
-        {/* <Header /> */}
+
         <main className="Layout__content">
-          {httpStatus === 200 ? children : <ErrorPage httpStatus={httpStatus} />}
+          {isSuccessful ? children : <ErrorPage statusCode={statusCode} />}
         </main>
-        {/* <Footer /> */}
       </div>
     );
   }
 }
 
-Layout.defaultProps = {
-  className: '',
-  title: '',
-  navCategory: 'individuals',
-  animated: false,
-  httpStatus: 200,
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  statusCode: PropTypes.number.isRequired,
+  isSuccessful: PropTypes.bool.isRequired,
+  className: PropTypes.string,
 };
 
-Layout.propTypes = {
-  className: PropTypes.string,
-  children: PropTypes.node.isRequired,
-  navCategory: PropTypes.string,
-  title: PropTypes.string,
-  animated: PropTypes.bool,
-  httpStatus: PropTypes.number,
+Layout.defaultProps = {
+  className: '',
 };
 
 export default Layout;

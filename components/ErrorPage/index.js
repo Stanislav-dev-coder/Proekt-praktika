@@ -4,25 +4,33 @@ import PropTypes from 'prop-types';
 // Styles
 import './styles.styl';
 
-const propTypes = {
-  httpStatus: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+const STATUS_DESCRIPTIONS = {
+  403: 'Нет доступа',
+  404: 'Страница не найдена',
+  500: 'Ошибка сервера',
 };
 
-/** @type {(props: ErrorPage.propTypes) => React.ForwardRefExoticComponent} */
-const ErrorPage = React.forwardRef(({ httpStatus }, ref) => {
-  const is404 = httpStatus === 404;
+/** 418 - ошибка в JS.
+ * @type {(props: ErrorPage.propTypes) => React.Component} */
+const ErrorPage = ({ statusCode }) => {
+  const description = STATUS_DESCRIPTIONS[statusCode];
 
   return (
-    <div ref={ref} className="ErrorPage">
-      {httpStatus}
-      {is404 && (
-        <p className="ErrorPage__message">К&nbsp;сожалению, такая страница не&nbsp;найдена</p>
+    <div className="ErrorPage">
+      {statusCode === 418 ? (
+        <h1 style={{ textAlign: 'center' }}>Что-то пошло не так...</h1>
+      ) : (
+        <React.Fragment>
+          <h1 style={{ textAlign: 'center' }}>Error {statusCode}</h1>
+          {description && <p>{description}</p>}
+        </React.Fragment>
       )}
     </div>
   );
-});
+};
 
-ErrorPage.displayName = 'ErrorPage';
-ErrorPage.propTypes = propTypes;
+ErrorPage.propTypes = {
+  statusCode: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+};
 
 export default ErrorPage;

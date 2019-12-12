@@ -53,11 +53,11 @@ function KitPage() {
       <Section title="ErrorPage">
         <Component>
           <h3>404</h3>
-          <ErrorPage httpStatus={404} />
+          <ErrorPage statusCode={404} />
         </Component>
         <Component>
           <h3>500</h3>
-          <ErrorPage httpStatus={500} />
+          <ErrorPage statusCode={500} />
         </Component>
       </Section>
 
