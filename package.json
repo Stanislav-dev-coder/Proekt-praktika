@@ -9,11 +9,11 @@
     "build": "next build",
     "start": "next build && NODE_ENV=production node server/index.js",
     "precommit": "npx lint-staged",
-    "prettier": "npx prettier --write \"./**/*.{js,jsx,json}\""
+    "eslint": "npx eslint -c ./.eslintrc.json --color \"./**/*.{js,jsx}\""
   },
   "lint-staged": {
-    "*.js": [
-      "npm run prettier",
+    "*.{js,jsx}": [
+      "npm run eslint",
       "git add"
     ]
   },
