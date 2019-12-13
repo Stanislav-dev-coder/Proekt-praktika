@@ -25,6 +25,7 @@ export const addTabularEvents = function() {
   document.addEventListener('keyup', tabClick);
   document.addEventListener('mousedown', disabledDocumentOutline);
 };
+
 export const removeTabularEvents = function() {
   // outline events
   document.removeEventListener('keyup', tabClick);

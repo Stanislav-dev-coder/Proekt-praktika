@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import cn from 'classnames/bind';
 
 // Components
 import AppLink from 'components/AppLink';
@@ -6,7 +7,9 @@ import ErrorPage from 'components/ErrorPage';
 import { Fade, Slide } from 'components/Animations';
 
 // Styles
-import './styles.styl';
+import styles from './styles.styl';
+
+const cx = cn.bind(styles);
 
 const Component = ({ children }) => <div style={{ marginBottom: '8px' }}>{children}</div>;
 const Section = ({ title, children, style }) => (
@@ -29,7 +32,7 @@ function KitPage() {
   }, []);
 
   return (
-    <div className="KitPage">
+    <div className={cx('KitPage')}>
       <h1>Kit Example</h1>
 
       <Section title="AppLink">
@@ -92,10 +95,10 @@ function KitPage() {
 
         <Slide in={isOpenSlide} duration={350} stagerDuration={30}>
           <ul style={{ position: 'absolute', right: 20 }}>
-            <li className="anim-slideItem">Link 1</li>
-            <li className="anim-slideItem">Link 2</li>
-            <li className="anim-slideItem">Link 3</li>
-            <li className="anim-slideItem">Link 4</li>
+            <li className={cx('anim-slideItem')}>Link 1</li>
+            <li className={cx('anim-slideItem')}>Link 2</li>
+            <li className={cx('anim-slideItem')}>Link 3</li>
+            <li className={cx('anim-slideItem')}>Link 4</li>
           </ul>
         </Slide>
       </Section>

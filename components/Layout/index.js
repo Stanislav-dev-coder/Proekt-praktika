@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import cn from 'classnames';
+import cn from 'classnames/bind';
 import Router from 'next/router';
-import { addTabularEvents, removeTabularEvents } from 'utils/tabularEvents';
+import { addTabularEvents, removeTabularEvents } from 'helpers/tabularEvents';
 
 // Componenst
 import ErrorPage from 'components/ErrorPage';
 import PageLoader from 'components/Animations/PageLoader';
 
 // Styles
-import '../../styles/document.styl';
-import './style.styl';
+import styles from './styles.styl';
+
+const cx = cn.bind(styles);
 
 class Layout extends Component {
   state = {
@@ -66,10 +67,10 @@ class Layout extends Component {
     const { isSuccessful, statusCode } = this.getPageStatus();
 
     return (
-      <div className={cn('Layout', className)}>
+      <div className={cx('Layout', className)}>
         <PageLoader in={this.state.routeChanging} />
 
-        <main className="Layout__content">
+        <main className={cx('Layout__content')}>
           {isSuccessful ? children : <ErrorPage statusCode={statusCode} />}
         </main>
       </div>
@@ -85,7 +86,7 @@ Layout.propTypes = {
 };
 
 Layout.defaultProps = {
-  className: '',
+  className: null,
 };
 
 export default Layout;

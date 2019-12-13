@@ -10,6 +10,9 @@ import rootReducer from '../state/';
 // Components
 import Layout from 'components/Layout';
 
+// Styles
+import 'styles/document.styl';
+
 let devtools = func => func;
 
 if (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__) {

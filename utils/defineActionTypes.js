@@ -1,11 +1,11 @@
-const prefix = '@';
-const divider = '/';
+const PREFIX = '@';
+const DIVIDER = '/';
 
 export default (namespace, actionTypesNames) => {
   const actionTypes = {};
 
   actionTypesNames.forEach(name => {
-    actionTypes[name] = prefix + namespace + divider + name;
+    actionTypes[name] = PREFIX + namespace + DIVIDER + name;
   });
 
   return actionTypes;

@@ -1,10 +1,14 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import cn from 'classnames/bind';
 import { gsap } from 'gsap';
 
 import Transition from 'react-transition-group/Transition';
 
-import './styles.styl';
+// Styles
+import styles from './styles.styl';
+
+const cx = cn.bind(styles);
 
 /** @type {(props: PageLoader.propTypes) => React.Component}*/
 const PageLoader = ({ in: inProp, duration }) => {
@@ -53,8 +57,8 @@ const PageLoader = ({ in: inProp, duration }) => {
 
   return (
     <Transition in={inProp} timeout={duration} onEnter={onEnter} onExit={onExit}>
-      <div ref={loaderRef} className="PageLoader">
-        <div className="PageLoader__line" ref={lineRef} />
+      <div ref={loaderRef} className={cx('PageLoader')}>
+        <div className={cx('PageLoader__line')} ref={lineRef} />
       </div>
     </Transition>
   );

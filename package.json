@@ -79,8 +79,7 @@
     "stylus": "^0.54.7",
     "url-loader": "^1.0.1",
     "uuid": "^3.3.2",
-    "validator": "^10.5.0",
-    "webpack": "^4.29.6"
+    "validator": "^10.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
