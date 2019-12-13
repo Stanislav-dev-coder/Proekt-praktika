@@ -4,7 +4,7 @@ const path = require('path');
 const withCSS = require('@zeit/next-css');
 const withStylus = require('@zeit/next-stylus');
 const poststylus = require('poststylus');
-const CssoWebpackPlugin = require('csso-webpack-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
 const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
 const COMMON_STYES = path.resolve('styles/common.styl');
@@ -23,7 +23,7 @@ const config = {
     });
 
     if (!IS_DEV_MODE) {
-      config.plugins.push(new CssoWebpackPlugin().default);
+      config.plugins.push(new CssoWebpackPlugin());
     }
 
     return config;
