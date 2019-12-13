@@ -1,27 +1,15 @@
 import React from 'react';
 import App from 'next/app';
-import { compose, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
-import thunk from 'redux-thunk';
 import handleResponseStatus from 'utils/handleResponseStatus';
-import rootReducer from '../state/';
+import getOrInitializeStore from '../store';
 
 // Components
 import Layout from 'components/Layout';
 
 // Styles
 import 'styles/document.styl';
-
-let devtools = func => func;
-
-if (process.browser && window.__REDUX_DEVTOOLS_EXTENSION__) {
-  devtools = window.__REDUX_DEVTOOLS_EXTENSION__();
-}
-
-const makeStore = initialState => {
-  return createStore(rootReducer, initialState, compose(applyMiddleware(thunk), devtools));
-};
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -43,4 +31,4 @@ class MyApp extends App {
   }
 }
 
-export default withRedux(makeStore)(MyApp);
+export default withRedux(getOrInitializeStore)(MyApp);
