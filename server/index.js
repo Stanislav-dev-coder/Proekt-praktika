@@ -1,14 +1,14 @@
+const path = require('path');
 const next = require('next');
 const express = require('express');
-const path = require('path');
-const routes = require('./routes');
+const router = require('./router');
 
 const PUBLIC_PATH = path.join(__dirname, '../public');
 const PORT = process.env.PORT;
 const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
 
 const app = next({ dev: IS_DEV_MODE });
-const handler = routes.getRequestHandler(app);
+const handler = router.getRequestHandler(app);
 
 // With express
 app.prepare().then(() => {
@@ -19,7 +19,6 @@ app.prepare().then(() => {
         req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       next();
     })
-    .use(handler)
 
     .get('/robots.txt', function(_req, res) {
       return res.status(200).sendFile('/robots.txt', {
@@ -28,5 +27,6 @@ app.prepare().then(() => {
       });
     })
 
+    .use(handler)
     .listen(PORT);
 });
