@@ -46,7 +46,7 @@
           "locales": "./locales",
           "utils": "./utils",
           "static": "./static",
-          "@router": "./utils/router"
+          "@router": "./utils/router/src"
         }
       }
     ]

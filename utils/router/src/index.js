@@ -19,8 +19,15 @@ class Router {
     this.parsedURLs = new Map();
   }
 
-  /**
+  /** Инициализация карты маршрутов для роутера.
+   * Данный метод должен вызываться перед инициализацией
+   * слушателя `getRequestHandler` для сервера.
+   *
+   * Все роуты записываются в `Map` коллекцию для
+   * более быстрого получения доступа к роутам.
+   *
    * @param {RouterMap} routerMap
+   * @return {Router}
    */
   initMap(routerMap) {
     this.routes = Object.entries(routerMap).reduce((routes, routeEntry) => {
@@ -37,6 +44,11 @@ class Router {
   }
 
   /** Мемоизация парсинга url.
+   *
+   * Поскольку парсинг url через регулярные выражения достаточно
+   * ресурсозатратный, добавлен обработчик который запоминает все url
+   * которые вводит пользователь.
+   *
    * @param {string} url
    * @return {UrlWithStringQuery}
    */
@@ -50,7 +62,7 @@ class Router {
     return this.parsedURLs.get(url);
   }
 
-  /**
+  /** Поиск роута по распаршеному url.
    * @param {UrlWithStringQuery} url
    * @return {Route | null}
    */
@@ -72,12 +84,22 @@ class Router {
     return foundRoute;
   }
 
-  /**
+  /** middleware для сервера.
+   * Метод возвращает функцию слушателя, которая должна
+   * обрабатывать все GET запросы к серверу. После вызова
+   * функции, обработчик проверяет url на соответствие роуту
+   * в экземпляре класса и передает соответствующим методам NextJS.
+   *
    * @param {NextServer} app
+   * @param {RouterMap} routerMap
    * @return {(req: Request, res: Response) => void}
    */
-  getRequestHandler(app) {
+  getRequestHandler(app, routes) {
     const nextHandler = app.getRequestHandler();
+
+    if (this.routes === null) {
+      this.initMap(routes);
+    }
 
     return (req, res) => {
       const parsedURL = this.parseURL(req.url);
@@ -88,7 +110,7 @@ class Router {
       } else {
         app.render(req, res, route.page, {
           ...parsedURL.query,
-          ...parsedURL.params,
+          ...route.getParams(parsedURL.pathname),
         });
       }
     };

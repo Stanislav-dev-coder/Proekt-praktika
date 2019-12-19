@@ -1,11 +1,13 @@
 import React from 'react';
 
-function UserPage({ userName }) {
+function UserPage({ slug }) {
   return (
     <div className="UserPage">
-      <h1>User name: {userName}</h1>
+      <h1>User name: {slug}</h1>
     </div>
   );
 }
+
+UserPage.getInitialProps = ({ query }) => ({ slug: query.slug });
 
 export default UserPage;

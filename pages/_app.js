@@ -6,7 +6,11 @@ import handleResponseStatus from 'utils/handleResponseStatus';
 import getOrInitializeStore from '../store';
 
 // Components
+import RouterProvider from '@router/components/RouterProvider';
 import Layout from 'components/Layout';
+
+// Configs
+import routes from 'config/routes';
 
 // Styles
 import 'styles/document.styl';
@@ -23,9 +27,11 @@ class MyApp extends App {
 
     return (
       <Provider store={store}>
-        <Layout statusCode={statusCode} isSuccessful={isSuccessful}>
-          <Component statusCode={statusCode} {...componentProps} />
-        </Layout>
+        <RouterProvider routes={routes}>
+          <Layout statusCode={statusCode} isSuccessful={isSuccessful}>
+            <Component statusCode={statusCode} {...componentProps} />
+          </Layout>
+        </RouterProvider>
       </Provider>
     );
   }
