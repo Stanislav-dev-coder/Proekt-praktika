@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames/bind';
 import Router from 'next/router';
-import { addTabularEvents, removeTabularEvents } from 'helpers/tabularEvents';
+import { addTabularEvents, removeTabularEvents } from 'utils/tabularEvents';
 
 // Componenst
 import ErrorPage from 'components/ErrorPage';
