@@ -1,4 +1,4 @@
-import defineActionTypes from '@utils/helpers/lib/defineActionTypes';
+import actionTypes from '@utils/action-types';
 
 // Define action types
-export default defineActionTypes('home', []);
+export default actionTypes('home', []);

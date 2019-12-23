@@ -30,20 +30,11 @@ import extend from 'lodash/extend';
  */
 export default function request(method, url, options) {
   const params = {};
-  const {
-    data = {},
-    before = () => {},
-    success = () => {},
-    error = console.log,
-    headers = {},
-    baseURL = process.env.API_URL,
-  } = options;
+  const { data = {}, headers = {}, baseURL = process.env.API_URL } = options;
 
   if (method === 'get') {
     extend(params, data);
   }
-
-  before();
 
   return axios({
     method,
@@ -54,13 +45,9 @@ export default function request(method, url, options) {
     data: method === 'get' ? {} : data,
   })
     .then(response => {
-      success(response.data);
-
       return response;
     })
     .catch(response => {
-      error(response);
-
-      return response;
+      return Promise.reject(response);
     });
 }

@@ -14,12 +14,12 @@ const DIVIDER = '/';
  * @param {ActionTypeName[]} actionTypesNames
  * @return {ActionTypes}
  */
-export default function defineActionTypes(namespace, actionTypesNames) {
-  const actionTypes = {};
+export default function actionTypes(namespace, actionTypesNames) {
+  const types = {};
 
   actionTypesNames.forEach(name => {
-    actionTypes[name] = PREFIX + namespace + DIVIDER + name;
+    types[name] = PREFIX + namespace + DIVIDER + name;
   });
 
-  return actionTypes;
+  return types;
 }

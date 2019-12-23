@@ -1,5 +1,3 @@
-import request from './request';
-import get from './get';
-import post from './post';
+import request from './src/request';
 
-export default { request, get, post };
+export default request;

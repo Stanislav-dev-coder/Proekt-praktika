@@ -1,3 +1,3 @@
-import formatNumber from './number';
+import current from './current';
 
-export default formatNumber;
+export default { current };
