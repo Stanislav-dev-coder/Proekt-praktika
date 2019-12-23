@@ -10,7 +10,8 @@
     "start": "next build && NODE_ENV=production node server/index.js",
     "precommit": "npx lint-staged",
     "eslint": "npx eslint --quiet -c ./.eslintrc.json --color \"./**/*.{js,jsx}\"",
-    "@router/test": "jest -c ./utils/router/jest.config.js"
+    "@router/test": "jest -c ./utils/router/jest.config.js",
+    "@helpers/test": "jest -c ./utils/helpers/jest.config.js"
   },
   "lint-staged": {
     "*.{js,jsx}": [

@@ -2,11 +2,11 @@ import React from 'react';
 import App from 'next/app';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
-import handleResponseStatus from 'utils/handleResponseStatus';
+import handleResponseStatus from '@utils/handle-response-status';
 import getOrInitializeStore from '../store';
 
 // Components
-import RouterProvider from '@router/components/RouterProvider';
+import RouterProvider from '@utils/router/RouterProvider';
 import Layout from 'components/Layout';
 
 // Configs

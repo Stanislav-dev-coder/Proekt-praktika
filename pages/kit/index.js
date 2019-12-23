@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import cn from 'classnames/bind';
 
 // Components
-import AppLink from 'components/AppLink';
+import Link from '@utils/router/Link';
 import ErrorPage from 'components/ErrorPage';
 import { Fade, Slide } from 'components/Animations';
 
@@ -35,21 +35,21 @@ function KitPage() {
     <div className={cx('KitPage')}>
       <h1>Kit Example</h1>
 
-      <Section title="AppLink">
+      <Section title="Link">
         <Component>
-          <AppLink href="/">Go to /home</AppLink>
+          <Link href="/">Go to /home</Link>
         </Component>
         <Component>
-          <AppLink href={null}>null</AppLink>
+          <Link href={null}>null</Link>
         </Component>
         <Component>
-          <AppLink>undefined</AppLink>
+          <Link>undefined</Link>
         </Component>
         <Component>
-          <AppLink href="#qwe">Hash</AppLink>
+          <Link href="#qwe">Hash</Link>
         </Component>
         <Component>
-          <AppLink href="#qwe2?asd=123">Hash + get properties</AppLink>
+          <Link href="#qwe2?asd=123">Hash + get properties</Link>
         </Component>
       </Section>
 

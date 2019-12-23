@@ -5,8 +5,8 @@ const { parse: urlParser } = require('url');
  * @typedef {import("url").UrlWithStringQuery} UrlWithStringQuery
  * @typedef {import("./Route").RoutePathname} RoutePathname
  * @typedef {import("./Route").RoutePage} RoutePage
- * @typedef {import("../types/Router").NextServer} NextServer
- * @typedef {import("../types/Router").RouterMap} RouterMap
+ * @typedef {import("next/dist/next-server/server/next-server").default} NextServer
+ * @typedef {Object.<string, string>} RouterMap
  */
 class Router {
   constructor() {
@@ -30,15 +30,17 @@ class Router {
    * @return {Router}
    */
   initMap(routerMap) {
-    this.routes = Object.entries(routerMap).reduce((routes, routeEntry) => {
-      const [pathname] = routeEntry;
+    if (!this.routes) {
+      this.routes = Object.entries(routerMap).reduce((routes, routeEntry) => {
+        const [pathname] = routeEntry;
 
-      if (!routes.has(pathname)) {
-        routes.set(pathname, new Route(...routeEntry));
-      }
+        if (!routes.has(pathname)) {
+          routes.set(pathname, new Route(...routeEntry));
+        }
 
-      return routes;
-    }, new Map());
+        return routes;
+      }, new Map());
+    }
 
     return this;
   }
@@ -66,17 +68,20 @@ class Router {
    * @param {UrlWithStringQuery} url
    * @return {Route | null}
    */
-  findRoute({ pathname }) {
+  findRoute({ host, pathname }) {
     let foundRoute = null;
 
-    // TODO: Можно мемоизировать найденые роуты
-    if (this.routes.has(pathname)) {
-      foundRoute = this.routes.get(pathname);
-    } else {
-      for (let route of this.routes) {
-        if (route[1].has(pathname)) {
-          foundRoute = route[1];
-          break;
+    // Ссылка с хостом — внешняя, а значит не проходит через роутер
+    if (!host) {
+      // TODO: Можно мемоизировать найденые роуты
+      if (this.routes.has(pathname)) {
+        foundRoute = this.routes.get(pathname);
+      } else {
+        for (let route of this.routes) {
+          if (route[1].has(pathname)) {
+            foundRoute = route[1];
+            break;
+          }
         }
       }
     }
@@ -84,37 +89,15 @@ class Router {
     return foundRoute;
   }
 
-  /** middleware для сервера.
-   * Метод возвращает функцию слушателя, которая должна
-   * обрабатывать все GET запросы к серверу. После вызова
-   * функции, обработчик проверяет url на соответствие роуту
-   * в экземпляре класса и передает соответствующим методам NextJS.
-   *
-   * @param {NextServer} app
-   * @param {RouterMap} routerMap
-   * @return {(req: Request, res: Response) => void}
+  /** Поиск роута по строке url.
+   * @param {string} url
+   * @return {Route | null}
    */
-  getRequestHandler(app, routes) {
-    const nextHandler = app.getRequestHandler();
+  findRouteByURL(url) {
+    const parsedURL = this.parseURL(url);
 
-    if (this.routes === null) {
-      this.initMap(routes);
-    }
-
-    return (req, res) => {
-      const parsedURL = this.parseURL(req.url);
-      const route = this.findRoute(parsedURL);
-
-      if (route === null) {
-        nextHandler(req, res, parsedURL);
-      } else {
-        app.render(req, res, route.page, {
-          ...parsedURL.query,
-          ...route.getParams(parsedURL.pathname),
-        });
-      }
-    };
+    return this.findRoute(parsedURL);
   }
 }
 
-module.exports = new Router();
+module.exports = Router;

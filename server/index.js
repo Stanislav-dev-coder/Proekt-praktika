@@ -1,7 +1,7 @@
 const path = require('path');
 const next = require('next');
 const express = require('express');
-const router = require('../utils/router');
+const getRequestHandler = require('../utils/router/getRequestHandler');
 const routes = require('../config/routes');
 
 const PUBLIC_PATH = path.join(__dirname, '../public');
@@ -9,7 +9,7 @@ const PORT = process.env.PORT;
 const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
 
 const app = next({ dev: IS_DEV_MODE });
-const handler = router.getRequestHandler(app, routes);
+const handler = getRequestHandler(app, routes);
 
 // With express
 app.prepare().then(() => {

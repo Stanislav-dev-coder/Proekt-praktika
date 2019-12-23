@@ -1,10 +1,12 @@
-const Router = require('../src/index');
+const Router = require('../src/Router');
 const Route = require('../src/Route');
 
 // TODO: Нужно Написать тест для getRequestHandler
 describe('@router.Router - Основные методы', () => {
+  let router = new Router();
+
   beforeEach(() => {
-    Router.initMap({
+    router.initMap({
       '/': '/home',
       '/about': '/about',
       '/user/:userName': '/user',
@@ -12,21 +14,21 @@ describe('@router.Router - Основные методы', () => {
   });
 
   it('Router.parseURL - Мемоизация парсера', () => {
-    Router.parseURL('/');
-    Router.parseURL('/asd');
-    Router.parseURL('/asd?asd=123');
-    Router.parseURL('/');
+    router.parseURL('/');
+    router.parseURL('/asd');
+    router.parseURL('/asd?asd=123');
+    router.parseURL('/');
 
-    expect(Router.parsedURLs.size).toEqual(3);
+    expect(router.parsedURLs.size).toEqual(3);
   })
 
   it('Router.parseURL - Проверка пути и параметров', () => {
-    expect(Router.parseURL('/')).toMatchObject({
+    expect(router.parseURL('/')).toMatchObject({
       pathname: '/',
       query: {},
     });
 
-    expect(Router.parseURL('/home?asd=1')).toMatchObject({
+    expect(router.parseURL('/home?asd=1')).toMatchObject({
       pathname: '/home',
       query: {
         asd: "1",
@@ -35,23 +37,50 @@ describe('@router.Router - Основные методы', () => {
   })
 
   it('Router.findRoute - Поиск роута', () => {
-    expect(Router.findRoute({ pathname: '/' })).not.toBe(null);
-    expect(Router.findRoute({ pathname: '/about' })).not.toBe(null);
+    expect(router.findRoute({ pathname: '/' })).not.toBe(null);
+    expect(router.findRoute({ pathname: '/about' })).not.toBe(null);
 
-    expect(Router.findRoute({ pathname: '/asd' })).toEqual(null);
-    expect(Router.findRoute({ pathname: '/' }))
+    expect(router.findRoute({ pathname: '/asd' })).toEqual(null);
+    expect(router.findRoute({ pathname: '/' }))
       .toMatchObject({
         page: '/home',
         route: '/',
       });
-    expect(Router.findRoute({ pathname: '/user/test' }))
+    expect(router.findRoute({ pathname: '/user/test' }))
       .toMatchObject({
         page: '/user',
         route: '/user/:userName',
       });
   })
+
+  it('Router.findRouteByURL - Поиск роута по строке url.', () => {
+    expect(router.findRouteByURL('http://www.my-site.com/')).toEqual(null);
+
+    expect(router.findRouteByURL('/')).toMatchObject({
+      page: '/home',
+      route: '/',
+    });
+
+    expect(router.findRouteByURL('/user/has87d?qwe=1231')).toMatchObject({
+      page: '/user',
+      route: '/user/:userName',
+    });
+
+    expect(router.findRouteByURL('/#wtf?a=!false')).toMatchObject({
+      page: '/home',
+      route: '/',
+    });
+
+    expect(router.findRouteByURL('/user/has87d?qwe=1231')).toMatchObject({
+      page: '/user',
+      route: '/user/:userName',
+    });
+
+    expect(router.findRouteByURL('http://ya.ru/user/has87d?qwe=1231')).toEqual(null);
+  })
 });
 
+// TODO: Добавить тест для .parseRoute
 describe('@router.Route', () => {
   it('Route.has - Проверка на соответствие роута url', () => {
     const fakeRoute = new Route('/test/:var1/badu', '/');

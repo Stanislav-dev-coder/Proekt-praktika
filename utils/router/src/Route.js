@@ -2,19 +2,19 @@ const { pathToRegexp } = require('path-to-regexp');
 
 /**
  * @typedef {import("path-to-regexp").Key} Key
- * @typedef {string} RouteRoute
+ * @typedef {string} Route
  * @typedef {string} RoutePage
  */
 class Route {
   /**
-   * @param {RouteRoute} route
+   * @param {Route} route
    * @param {RoutePage} page
    */
   constructor(route, page) {
     const parsedRoute = this.constructor.parseRoute(route);
 
-    this.route = route;
     this.page = page;
+    this.route = route;
     this.routeRegex = parsedRoute.regExp;
     this.paramsNames = parsedRoute.paramsNames;
   }

@@ -1,30 +1,27 @@
 import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Router } from 'server/routes';
-import { useRouter } from 'next/router';
-import isModifiedEvent from 'utils/isModifiedEvent';
-import isExternalUrl from 'utils/isExternalUrl';
 
-/** @type {(props: AppLink.propTypes) => React.ForwardRefExoticComponent} */
-const AppLink = React.forwardRef(
-  ({ children, href, targetBlank, download, disabled, routerParams, className, onClick }, ref) => {
+// Hooks
+import { useRouter } from 'next/router';
+import useRoute from '../hooks/useRoute';
+
+// Utils
+import isModifiedEvent from '@utils/helpers/lib/isModifiedEvent';
+import isExternalUrl from '@utils/helpers/lib/isExternalUrl';
+import objectToQuery from '@utils/helpers/lib/objectToQuery';
+
+/** @type {(props: Link.propTypes) => React.ForwardRefExoticComponent} */
+const Link = React.forwardRef(
+  ({ children, href, targetBlank, download, disabled, options, className, onClick }, ref) => {
+    const route = useRoute(href);
     const nextRouter = useRouter();
     const isExternal = useMemo(() => targetBlank || isExternalUrl(href), [href, targetBlank]);
-    const link = useMemo(() => {
-      /** @type {string} */
-      let linkHref = href;
-
-      // Обработка хэшей в ссылке
-      if (linkHref && linkHref[0] === '#') {
-        linkHref = nextRouter.asPath.replace(/#.*/g, '') + href.match(/#.*$/g)[0];
-      }
-
+    const linkMetaInfo = useMemo(() => {
       return {
-        href: linkHref,
         target: isExternal ? '_blank' : null,
         rel: isExternal ? 'nofollow noopener' : null,
       };
-    }, [href, isExternal, nextRouter.asPath]);
+    }, [isExternal]);
 
     /** Слушатель события клика.
      * @constant
@@ -36,10 +33,9 @@ const AppLink = React.forwardRef(
         // onClick всегда должен быть первым
         if (
           onClick(e) === false ||
-          !link.href ||
+          !route ||
           disabled ||
           download ||
-          isExternal ||
           e.defaultPrevented ||
           e.button !== 0 ||
           isModifiedEvent(e)
@@ -47,18 +43,21 @@ const AppLink = React.forwardRef(
           return;
         } else {
           e.preventDefault();
-          Router.pushRoute(link.href, routerParams);
+
+          const routePathToPage = `${route.page}${objectToQuery(route.getParams(href))}`;
+
+          nextRouter.push(routePathToPage, href, options);
         }
       },
-      [disabled, download, link.href, isExternal, onClick, routerParams],
+      [disabled, download, href, nextRouter, onClick, options, route],
     );
 
     return (
       <a
         ref={ref}
-        href={link.href}
-        rel={link.rel}
-        target={link.target}
+        href={href}
+        rel={linkMetaInfo.rel}
+        target={linkMetaInfo.target}
         disabled={disabled}
         className={className}
         onClick={onClickHandler}
@@ -69,28 +68,28 @@ const AppLink = React.forwardRef(
   },
 );
 
-AppLink.displayName = 'AppLink';
+Link.displayName = 'Link';
 
-AppLink.propTypes = {
+Link.propTypes = {
   children: PropTypes.any,
   href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   targetBlank: PropTypes.bool,
   download: PropTypes.bool,
   disabled: PropTypes.bool,
-  routerParams: PropTypes.object,
+  options: PropTypes.object,
   className: PropTypes.string,
   onClick: PropTypes.func,
 };
 
-AppLink.defaultProps = {
+Link.defaultProps = {
   children: null,
   href: null,
   targetBlank: false,
   download: false,
   disabled: false,
-  routerParams: {},
+  options: {},
   className: null,
   onClick: () => true,
 };
 
-export default AppLink;
+export default Link;

@@ -44,9 +44,8 @@
           "store": "./store",
           "lib": "./lib",
           "locales": "./locales",
-          "utils": "./utils",
           "static": "./static",
-          "@router": "./utils/router/src"
+          "@utils": "./utils"
         }
       }
     ]
