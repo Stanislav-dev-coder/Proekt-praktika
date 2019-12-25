@@ -1,5 +1,8 @@
+const memoize = require('memoizee');
 const Route = require('./Route');
-const { parse: urlParser } = require('url');
+const urlParser = require('./urlParser');
+
+const URL_CACHE_SIZE = 100;
 
 /**
  * @typedef {import("url").UrlWithStringQuery} UrlWithStringQuery
@@ -9,14 +12,13 @@ const { parse: urlParser } = require('url');
  * @typedef {Object.<string, string>} RouterMap
  */
 class Router {
-  constructor() {
+  /** @param {{ urlCacheSize: number }} options */
+  constructor(options = {}) {
+    const { urlCacheSize = URL_CACHE_SIZE } = options;
+
     /** @type {Map.<RoutePathname, RoutePathname>} */
     this.routes = null;
-
-    // TODO: Нужно добавить ограничение мемоизации во избежание утечек
-    // oldURLs = null; // url которые использовались реже всех
-    // parsedURLsMaxSize = 30;
-    this.parsedURLs = new Map();
+    this.parseURL = memoize(urlParser, { max: urlCacheSize });
   }
 
   /** Инициализация карты маршрутов для роутера.
@@ -45,25 +47,6 @@ class Router {
     return this;
   }
 
-  /** Мемоизация парсинга url.
-   *
-   * Поскольку парсинг url через регулярные выражения достаточно
-   * ресурсозатратный, добавлен обработчик который запоминает все url
-   * которые вводит пользователь.
-   *
-   * @param {string} url
-   * @return {UrlWithStringQuery}
-   */
-  parseURL(url) {
-    if (this.parsedURLs.has(url)) {
-      return this.parsedURLs.get(url);
-    }
-
-    this.parsedURLs.set(url, urlParser(url, true));
-
-    return this.parsedURLs.get(url);
-  }
-
   /** Поиск роута по распаршеному url.
    * @param {UrlWithStringQuery} url
    * @return {Route | null}
@@ -73,7 +56,6 @@ class Router {
 
     // Ссылка с хостом — внешняя, а значит не проходит через роутер
     if (!host) {
-      // TODO: Можно мемоизировать найденые роуты
       if (this.routes.has(pathname)) {
         foundRoute = this.routes.get(pathname);
       } else {
@@ -94,9 +76,11 @@ class Router {
    * @return {Route | null}
    */
   findRouteByURL(url) {
-    const parsedURL = this.parseURL(url);
+    if (!url) {
+      return null;
+    }
 
-    return this.findRoute(parsedURL);
+    return this.findRoute(this.parseURL(url));
   }
 }
 

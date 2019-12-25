@@ -9,6 +9,8 @@ const HomePage = () => {
     <div>
       <h1>Title:: {title}</h1>
 
+      <Link>empty</Link>
+      <br />
       <Link href="/">Home Page</Link>
       <br />
       <Link href="http://localhost:3000/">http://localhost:3000/</Link>
@@ -26,6 +28,8 @@ const HomePage = () => {
       <Link href="http://yandex.ru/">http://yandex.ru/</Link>
       <br />
       <Link href="http://yandex.ru/?asd=123">http://yandex.ru/?asd=123</Link>
+      <br />
+      <Link href="/lk/test/kit">/lk/test/kit</Link>
       <br />
     </div>
   );

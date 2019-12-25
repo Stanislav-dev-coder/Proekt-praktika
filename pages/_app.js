@@ -10,7 +10,7 @@ import RouterProvider from '@utils/router/RouterProvider';
 import Layout from 'components/Layout';
 
 // Configs
-import routes from 'config/routes';
+import routes from 'server/routes';
 
 // Styles
 import 'styles/document.styl';

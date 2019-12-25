@@ -33,16 +33,13 @@
     [
       "module-resolver",
       {
-        "root": [
-          "./"
-        ],
+        "root": [ "./" ],
         "alias": {
           "components": "./components",
           "config": "./config",
-          "containers": "./containers",
           "pages": "./pages",
+          "server": "./server",
           "store": "./store",
-          "lib": "./lib",
           "locales": "./locales",
           "static": "./static",
           "@utils": "./utils"

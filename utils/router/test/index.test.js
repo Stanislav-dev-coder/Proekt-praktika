@@ -1,5 +1,6 @@
 const Router = require('../src/Router');
 const Route = require('../src/Route');
+const initRoutes = require('../src/initRoutes');
 
 // TODO: Нужно Написать тест для getRequestHandler
 describe('@router.Router - Основные методы', () => {
@@ -9,18 +10,10 @@ describe('@router.Router - Основные методы', () => {
     router.initMap({
       '/': '/home',
       '/about': '/about',
+      '/lk/test/kit': '/kit',
       '/user/:userName': '/user',
     });
   });
-
-  it('Router.parseURL - Мемоизация парсера', () => {
-    router.parseURL('/');
-    router.parseURL('/asd');
-    router.parseURL('/asd?asd=123');
-    router.parseURL('/');
-
-    expect(router.parsedURLs.size).toEqual(3);
-  })
 
   it('Router.parseURL - Проверка пути и параметров', () => {
     expect(router.parseURL('/')).toMatchObject({
@@ -41,6 +34,7 @@ describe('@router.Router - Основные методы', () => {
     expect(router.findRoute({ pathname: '/about' })).not.toBe(null);
 
     expect(router.findRoute({ pathname: '/asd' })).toEqual(null);
+    expect(router.findRoute({ pathname: '/kit' })).toEqual(null);
     expect(router.findRoute({ pathname: '/' }))
       .toMatchObject({
         page: '/home',
@@ -55,6 +49,7 @@ describe('@router.Router - Основные методы', () => {
 
   it('Router.findRouteByURL - Поиск роута по строке url.', () => {
     expect(router.findRouteByURL('http://www.my-site.com/')).toEqual(null);
+    expect(router.findRouteByURL('/kit')).toEqual(null);
 
     expect(router.findRouteByURL('/')).toMatchObject({
       page: '/home',
@@ -105,3 +100,20 @@ describe('@router.Route', () => {
     expect(fakeRoute2.getParams('/test')).toEqual({});
   })
 });
+
+describe('@router - Дополнительные методы', () => {
+  it('initRoutes', () => {
+    const fakeRoutes = {
+      '/': '/home',
+      '/data': '/data',
+      '/qwe': '/src/qwe',
+    };
+
+    expect(initRoutes('', fakeRoutes)).toEqual(fakeRoutes);
+    expect(initRoutes('lk/ac', fakeRoutes)).toEqual({
+      'lk/ac': '/home',
+      'lk/ac/data': '/data',
+      'lk/ac/qwe': '/src/qwe',
+    });
+  })
+})

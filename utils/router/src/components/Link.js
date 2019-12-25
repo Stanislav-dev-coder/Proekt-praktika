@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 // Hooks
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import useRoute from '../hooks/useRoute';
 
 // Utils
@@ -13,15 +13,12 @@ import objectToQuery from '@utils/helpers/lib/objectToQuery';
 /** @type {(props: Link.propTypes) => React.ForwardRefExoticComponent} */
 const Link = React.forwardRef(
   ({ children, href, targetBlank, download, disabled, options, className, onClick }, ref) => {
+    const isChangingRoute = useRef();
     const route = useRoute(href);
-    const nextRouter = useRouter();
+
     const isExternal = useMemo(() => targetBlank || isExternalUrl(href), [href, targetBlank]);
-    const linkMetaInfo = useMemo(() => {
-      return {
-        target: isExternal ? '_blank' : null,
-        rel: isExternal ? 'nofollow noopener' : null,
-      };
-    }, [isExternal]);
+    const target = useMemo(() => ((isExternal ? '_blank' : null)), [isExternal]);
+    const rel = useMemo(() => ((isExternal ? 'nofollow noopener' : null)), [isExternal]);
 
     /** Слушатель события клика.
      * @constant
@@ -33,32 +30,56 @@ const Link = React.forwardRef(
         // onClick всегда должен быть первым
         if (
           onClick(e) === false ||
-          !route ||
+          isExternal ||
           disabled ||
           download ||
           e.defaultPrevented ||
           e.button !== 0 ||
+          !route ||
           isModifiedEvent(e)
         ) {
           return;
         } else {
           e.preventDefault();
 
-          const routePathToPage = `${route.page}${objectToQuery(route.getParams(href))}`;
+          // TODO: Поведение отличается от нативного
+          // Отмена перехода если роут меняется
+          if (!isChangingRoute.current) {
+            const routePathToPage = `${route.page}${objectToQuery(route.getParams(href))}`;
 
-          nextRouter.push(routePathToPage, href, options);
+            Router.push(routePathToPage, href, options);
+          }
         }
       },
-      [disabled, download, href, nextRouter, onClick, options, route],
+      [disabled, download, href, isExternal, onClick, options, route],
     );
+
+    useEffect(() => {
+      function routeChangeStart() {
+        isChangingRoute.current = true;
+      }
+
+      function routeChangeComplete() {
+        isChangingRoute.current = false;
+      }
+
+      Router.router.events.on('routeChangeStart', routeChangeStart);
+      Router.router.events.on('routeChangeComplete', routeChangeComplete);
+
+      return () => {
+        Router.router.events.off('routeChangeStart', routeChangeStart);
+        Router.router.events.off('routeChangeComplete', routeChangeComplete);
+      };
+    }, []);
 
     return (
       <a
         ref={ref}
         href={href}
-        rel={linkMetaInfo.rel}
-        target={linkMetaInfo.target}
+        rel={rel}
+        target={target}
         disabled={disabled}
+        download={download}
         className={className}
         onClick={onClickHandler}
       >
@@ -72,7 +93,7 @@ Link.displayName = 'Link';
 
 Link.propTypes = {
   children: PropTypes.any,
-  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  href: PropTypes.string,
   targetBlank: PropTypes.bool,
   download: PropTypes.bool,
   disabled: PropTypes.bool,

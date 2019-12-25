@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 const path = require('path');
 const next = require('next');
 const express = require('express');
 const getRequestHandler = require('../utils/router/getRequestHandler');
-const routes = require('../config/routes');
+const routes = require('./routes');
 
 const PUBLIC_PATH = path.join(__dirname, '../public');
 const PORT = process.env.PORT;
