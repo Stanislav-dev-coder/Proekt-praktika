@@ -34,14 +34,14 @@ down: ## Stop all started for development containers
 shell: up ## Start shell into application container
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" /bin/sh
 
-install: ## Install dependency
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
+install: up ## Install dependency
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
 
 build: install ## Build
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn build
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn build
 
 start: install ## Start production server
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn start
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn start
 
 dev: ## Gulp dev fronend with hotreload
-	$(docker_compose_bin) run --workdir="/app" --rm "$(APP_CONTAINER_NAME)" yarn dev
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn dev
