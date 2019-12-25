@@ -13,7 +13,6 @@ const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
 const app = next({ dev: IS_DEV_MODE });
 const handler = getRequestHandler(app, routes);
 
-// With express
 app.prepare().then(() => {
   express()
     .set('trust proxy', true)
