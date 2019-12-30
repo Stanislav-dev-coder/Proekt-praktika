@@ -33,26 +33,17 @@
     [
       "module-resolver",
       {
-        "root": [
-          "./"
-        ],
+        "root": [ "./" ],
         "alias": {
           "components": "./components",
           "config": "./config",
-          "containers": "./containers",
           "pages": "./pages",
+          "server": "./server",
           "store": "./store",
-          "lib": "./lib",
           "locales": "./locales",
-          "utils": "./utils",
-          "static": "./static"
+          "static": "./static",
+          "@utils": "./utils"
         }
-      }
-    ],
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        "legacy": true
       }
     ]
   ]

@@ -1,53 +1,77 @@
-import React, { Component } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import cn from 'classnames/bind';
 import { gsap } from 'gsap';
 
 import Transition from 'react-transition-group/Transition';
 
-import './styles.styl';
+// Styles
+import styles from './styles.styl';
 
-const DUR = 300;
+const cx = cn.bind(styles);
 
-class PageLoader extends Component {
-	onEnter = node => {
-		if (this.tl) this.tl.pause();
-		gsap.killTweensOf(node);
-		gsap.killTweensOf(this.line);
+/** @type {(props: PageLoader.propTypes) => React.Component}*/
+const PageLoader = ({ in: inProp, duration }) => {
+  const loaderRef = useRef();
+  const lineRef = useRef();
+  const durationInSeconds = duration / 1000;
 
-		const duration = (this.props.duration || DUR) / 1000;
-		gsap.fromTo(node, duration, { autoAlpha: 0 }, { autoAlpha: 1 });
+  /** @type {(node: Node) => void} */
+  const killTweens = useCallback(() => {
+    gsap.killTweensOf(loaderRef.current);
+    gsap.killTweensOf(lineRef.current);
+  }, []);
 
-		this.tl = gsap.timeline();
-		this.tl
-			.fromTo(this.line, 0.2, { x: '-100%' }, { x: '-40%', ease: 'power2.inOut' })
-			.to(this.line, 2, { x: '-10%', ease: 'none' });
-	};
-	onExit = node => {
-		if (this.tl) this.tl.pause();
-		gsap.killTweensOf(node);
-		gsap.killTweensOf(this.line);
+  /** Движение лоадера до 90%
+   * @type {(node: Node) => void}
+   */
+  const onEnter = useCallback(() => {
+    killTweens();
 
-		this.tl = gsap.timeline();
-		const duration = (this.props.duration || DUR) / 1000;
-		this.tl
-			.to(this.line, duration, { x: '0%', ease: 'power2.inOut' })
-			.to(node, duration, { autoAlpha: 0 }, '-=0.1');
-	};
+    gsap.fromTo(loaderRef.current, durationInSeconds, { autoAlpha: 0 }, { autoAlpha: 1 });
 
-	getLineRef = node => {
-		if (node) this.line = node;
-	};
+    gsap
+      .timeline()
+      .fromTo(lineRef.current, 0.2, { x: '-100%' }, { x: '-40%', ease: 'power2.inOut' })
+      .to(lineRef.current, 2, { x: '-10%', ease: 'none' });
+  }, [durationInSeconds, killTweens]);
 
-	render() {
-		const { in: inProp, duration, children } = this.props;
+  /**
+   * Быстрое движение лоадера в конец.
+   * @type {(node: Node) => void}
+   */
+  const onExit = useCallback(() => {
+    killTweens();
 
-		return (
-			<Transition in={inProp} timeout={duration || DUR} onEnter={this.onEnter} onExit={this.onExit}>
-				<div className="PageLoader">
-					<div className="PageLoader__line" ref={this.getLineRef} />
-				</div>
-			</Transition>
-		);
-	}
-}
+    gsap
+      .timeline()
+      .to(lineRef.current, durationInSeconds, { x: '0%', ease: 'power2.inOut' })
+      .to(loaderRef.current, durationInSeconds, { autoAlpha: 0 }, '-=0.1');
+  }, [durationInSeconds, killTweens]);
+
+  useEffect(() => {
+    return () => {
+      killTweens();
+    };
+  }, [killTweens]);
+
+  return (
+    <Transition in={inProp} timeout={duration} onEnter={onEnter} onExit={onExit}>
+      <div ref={loaderRef} className={cx('PageLoader')}>
+        <div className={cx('PageLoader__line')} ref={lineRef} />
+      </div>
+    </Transition>
+  );
+};
+
+PageLoader.propTypes = {
+  in: PropTypes.bool,
+  duration: PropTypes.number,
+};
+
+PageLoader.defaultProps = {
+  in: false,
+  duration: 300,
+};
 
 export default PageLoader;

@@ -1,20 +1,44 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import cn from 'classnames/bind';
 
-import './styles.styl';
+// Styles
+import styles from './styles.styl';
 
-class ErrorPage extends Component {
-	render() {
-		const is404 = this.props.httpStatus === 404;
+const cx = cn.bind(styles);
 
-		return (
-			<div className="ErrorPage" ref={this.imageWrapperRef}>
-				{this.props.httpStatus}
-				{is404 && (
-					<p className="ErrorPage__message">К&nbsp;сожалению, такая страница не&nbsp;найдена</p>
-				)}
-			</div>
-		);
-	}
-}
+const STATUS_DESCRIPTIONS = {
+  403: 'Нет доступа',
+  404: 'Страница не найдена',
+  500: 'Ошибка сервера',
+};
+
+/** 418 - ошибка в JS.
+ * @type {(props: ErrorPage.propTypes) => React.Component} */
+const ErrorPage = ({ statusCode, className }) => {
+  const description = STATUS_DESCRIPTIONS[statusCode];
+
+  return (
+    <div className={cx('ErrorPage', className)}>
+      {statusCode === 418 ? (
+        <h1 style={{ textAlign: 'center' }}>Что-то пошло не так...</h1>
+      ) : (
+        <React.Fragment>
+          <h1 style={{ textAlign: 'center' }}>Error {statusCode}</h1>
+          {description && <p>{description}</p>}
+        </React.Fragment>
+      )}
+    </div>
+  );
+};
+
+ErrorPage.propTypes = {
+  statusCode: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  className: PropTypes.string,
+};
+
+ErrorPage.defaultProps = {
+  className: null,
+};
 
 export default ErrorPage;

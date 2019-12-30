@@ -1,4 +1,8 @@
-const routes = (module.exports = require('next-routes')());
+const initRoutes = require('../utils/router/initRoutes');
 
-routes.add('home', '/', 'index');
-routes.add('example', '/example', 'example');
+module.exports = initRoutes(process.env.ASSET_PREFIX, {
+  '/': '/home',
+  '/home': '/home',
+  '/kit': '/kit',
+  '/user/:slug': '/user',
+});

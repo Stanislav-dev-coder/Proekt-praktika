@@ -26,10 +26,12 @@ yarn-error.log*
 .vs
 .idea
 
+jsconfig.json
+
 docker/home/*
 !.gitkeep
 
-docker/log/*	
+docker/log/*
 !.gitkeep
 
 docker/conf/nginx-site.conf

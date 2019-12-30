@@ -1,35 +1,31 @@
 // durations
 $duration = 0.35s
-
 // fonts
 $fontFamily = 'Roboto', Arial, Helvetica, sans-serif
 $fontSize = 16px
 $lineHeight = 1.5
-
 // colors
-$colors = json('../../config/colors.json', { hash: true });
+$colors = json('../../config/colors.json', { hash: true })
+
 for $name, $color in $colors {
-	define('$' + $name + 'Color', $color)
+  define('$' + $name + 'Color', $color)
 }
 
 // media queries
-$breakpoints = json('../../config/breakpoints.json', { hash: true });
+$breakpoints = json('../../config/breakpoints.json', { hash: true })
+
 for $name, $breakpoint in $breakpoints {
-	define('$' + $name, get-max-width($breakpoint))
-	define('$' + $name + 'WithoutVerticalTablet', get-min-and-max-width($breakpoints.verticalTablet+1, $breakpoint))
-	define('$' + $name + 'WithoutPhone', get-min-and-max-width($breakpoints.phone+1, $breakpoint))
+  define('$' + $name, get-max-width($breakpoint))
+  define('$' + $name + 'WithoutVerticalTablet', get-min-and-max-width($breakpoints.verticalTablet + 1, $breakpoint))
+  define('$' + $name + 'WithoutPhone', get-min-and-max-width($breakpoints.phone + 1, $breakpoint))
 }
-$breakpointsMf = json('../../config/breakpoints-mf.json', { hash: true })
-for $nameMf, $breakpointMf in $breakpointsMf {
-	define('$' + $nameMf, get-min-width($breakpointMf))
-}
-$withoutVerticalTablet = get-min-width($breakpoints.verticalTablet+1);
-$withoutPhone = get-min-width($breakpoints.phone+1);
+
+$withoutVerticalTablet = get-min-width($breakpoints.verticalTablet + 1)
+$withoutPhone = get-min-width($breakpoints.phone + 1)
 $landscape = '(orientation: landscape)'
 $portrait = '(orientation: portrait)'
 $retina = '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)'
-
 // grid
 $phoneSpaceX = 20px
 $columns = 12
-$grid = json('../../config/grid.json', { hash: true });
+$grid = json('../../config/grid.json', { hash: true })
