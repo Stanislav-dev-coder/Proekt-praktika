@@ -1,10 +1,15 @@
 require('dotenv').config();
 
+const bundleAnalyzer = require('@next/bundle-analyzer');
 const path = require('path');
 const withCSS = require('@zeit/next-css');
 const withStylus = require('@zeit/next-stylus');
 const poststylus = require('poststylus');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+
+const withAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZER == 1,
+});
 
 const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
 const COMMON_STYES = path.resolve('styles/common.styl');
@@ -48,4 +53,4 @@ const config = {
   },
 };
 
-module.exports = withCSS(withStylus(config));
+module.exports = withAnalyzer(withCSS(withStylus(config)));
