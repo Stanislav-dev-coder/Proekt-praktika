@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { gsap } from 'gsap';
+import anim from '@utils/animation';
 
 import Transition from 'react-transition-group/Transition';
 
@@ -12,17 +12,19 @@ const DEFAULT_STYLE = {
  * @type {(props: Fade.propTypes) => React.Component}
  */
 const Fade = ({ in: inProp, duration, children, className }) => {
-  const durationInSeconds = duration / 1000;
-
   /** Обработчик для появления элемента.
    * @type {(node: Node) => void}
    */
   const onEnter = useCallback(
     node => {
-      gsap.killTweensOf(node);
-      gsap.fromTo(node, durationInSeconds, { opacity: 0 }, { opacity: 1 });
+      anim.remove(node);
+      anim(node, {
+        duration,
+        opacity: 1,
+        ease: 'easeOut',
+      });
     },
-    [durationInSeconds],
+    [duration],
   );
 
   /** Обработчик для скрытия элемента.
@@ -30,10 +32,14 @@ const Fade = ({ in: inProp, duration, children, className }) => {
    */
   const onExit = useCallback(
     node => {
-      gsap.killTweensOf(node);
-      gsap.to(node, durationInSeconds, { opacity: 0 });
+      anim.remove(node);
+      anim(node, {
+        duration,
+        opacity: 0,
+        ease: 'easeIn',
+      });
     },
-    [durationInSeconds],
+    [duration],
   );
 
   return (
