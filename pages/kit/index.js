@@ -33,6 +33,22 @@ function KitPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const arr = [1, 2, 3, 4, 5, 6, 7];
+
+    arr.map(a => a);
+    arr.filter(a => a);
+    arr.reduce((_a, i) => 1 + i, null);
+    arr.includes(2);
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve(1);
+      }, 1000);
+    })
+      .then(() => console.log('then'))
+      .catch(() => console.log('catch'));
+  });
+
   return (
     <div className={cx('KitPage')}>
       <h1>Kit Example</h1>
