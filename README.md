@@ -90,7 +90,7 @@ pm2 startOrRestart ecosystem.config.js
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "module": "commonjs",
     "paths": {
       "*": ["./*"],
