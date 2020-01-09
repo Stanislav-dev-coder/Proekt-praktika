@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { gsap } from 'gsap';
+import anim from '@utils/animation';
 
 // Components
 import Transition from 'react-transition-group/Transition';
@@ -25,9 +25,6 @@ const DEFAULT_STYLE = {
  * </Slide>
  */
 const Slide = ({ in: inProp, duration, staggerDuration, staggerClass, children, className }) => {
-  const durationInSeconds = duration / 1000;
-  const stagerDurationInSeconds = staggerDuration / 1000;
-
   /** Открытие слайда.
    * @type {(node: Node) => void}
    */
@@ -36,34 +33,26 @@ const Slide = ({ in: inProp, duration, staggerDuration, staggerClass, children, 
       const slideItems = node.querySelectorAll(`.${staggerClass}`);
       const reverseItems = Array.prototype.map.call(slideItems, item => item).reverse();
 
-      gsap.killTweensOf(node);
-      gsap.fromTo(
-        node,
-        durationInSeconds,
-        { height: 0, opacity: 0 },
-        { height: node.scrollHeight, opacity: 1, ease: 'power1.easeOut' },
-      );
+      anim.remove(node);
+      anim(node, {
+        duration,
+        height: [0, node.scrollHeight],
+        opacity: [0, 1],
+        easing: 'easeOutSine',
+      });
 
       if (slideItems.length) {
-        gsap.killTweensOf(slideItems);
-        gsap.fromTo(
-          reverseItems,
-          durationInSeconds,
-          {
-            y: -15,
-            opacity: 0,
-            stagger: stagerDurationInSeconds,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            ease: 'power1.easeOut',
-            stagger: stagerDurationInSeconds,
-          },
-        );
+        anim.remove(slideItems);
+        anim(reverseItems, {
+          duration,
+          translateY: [-15, 0],
+          opacity: [0, 1],
+          ease: 'easeOutQuint',
+          delay: anim.stagger(staggerDuration),
+        });
       }
     },
-    [durationInSeconds, stagerDurationInSeconds, staggerClass],
+    [duration, staggerClass, staggerDuration],
   );
 
   /** Закрытие слайда.
@@ -71,10 +60,15 @@ const Slide = ({ in: inProp, duration, staggerDuration, staggerClass, children, 
    */
   const onExit = useCallback(
     node => {
-      gsap.killTweensOf(node);
-      gsap.to(node, durationInSeconds, { height: 0, opacity: 0, ease: 'power1.easeOut' });
+      anim.remove(node);
+      anim(node, {
+        duration,
+        height: 0,
+        opacity: 0,
+        ease: 'easeInSine',
+      });
     },
-    [durationInSeconds],
+    [duration],
   );
 
   return (

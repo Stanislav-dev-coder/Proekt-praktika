@@ -5,6 +5,7 @@ import cn from 'classnames/bind';
 import Link from '@utils/router/Link';
 import ErrorPage from 'components/ErrorPage';
 import { Fade, Slide } from 'components/Animations';
+import PageLoader from 'components/Animations/PageLoader';
 
 // Styles
 import styles from './styles.styl';
@@ -20,6 +21,7 @@ const Section = ({ title, children, style }) => (
 );
 
 function KitPage() {
+  const [isStartedLoader, startLoader] = useState(false);
   const [isOpenFade, showFade] = useState(false);
   const [isOpenSlide, showSlide] = useState(false);
 
@@ -30,6 +32,22 @@ function KitPage() {
       document.documentElement.classList.remove('kit-page');
     };
   }, []);
+
+  useEffect(() => {
+    const arr = [1, 2, 3, 4, 5, 6, 7];
+
+    arr.map(a => a);
+    arr.filter(a => a);
+    arr.reduce((_a, i) => 1 + i, null);
+    arr.includes(2);
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve(1);
+      }, 1000);
+    })
+      .then(() => console.log('then'))
+      .catch(() => console.log('catch'));
+  });
 
   return (
     <div className={cx('KitPage')}>
@@ -64,12 +82,23 @@ function KitPage() {
         </Component>
       </Section>
 
+      <Section title="PageLoader">
+        <button type="button" onClick={() => startLoader(true)}>
+          Start
+        </button>
+        <button type="button" onClick={() => startLoader(false)}>
+          End
+        </button>
+
+        <PageLoader in={isStartedLoader} />
+      </Section>
+
       <Section title="Fade">
         <button type="button" onClick={() => showFade(!isOpenFade)}>
           Change Fade state
         </button>
 
-        <Fade in={isOpenFade} duration={1000}>
+        <Fade in={isOpenFade} duration={300}>
           <ul style={{ position: 'absolute' }}>
             <li>Link 1</li>
             <li>Link 2</li>
@@ -93,7 +122,7 @@ function KitPage() {
           </ul>
         </Slide>
 
-        <Slide in={isOpenSlide} duration={350} stagerDuration={30}>
+        <Slide in={isOpenSlide} duration={300} stagerDuration={30}>
           <ul style={{ position: 'absolute', right: 20 }}>
             <li className={cx('anim-slideItem')}>Link 1</li>
             <li className={cx('anim-slideItem')}>Link 2</li>
