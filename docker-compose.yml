@@ -23,7 +23,7 @@ services:
       - ./src:/app:rw
     container_name: ${VIRTUAL_HOST}-app
     working_dir: "/app"
-    ports: ["${PORT}:${PORT}"]
+    ports: ["${PORT}:${PORT}", "9229:9229"]
     networks:
       - backend-network
       - web-projects

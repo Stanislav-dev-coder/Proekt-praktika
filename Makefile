@@ -15,8 +15,8 @@ docker_bin := $(shell command -v docker 2> /dev/null)
 docker_compose_bin := $(shell command -v docker-compose 2> /dev/null)
 
 .PHONY : help up down \
-        shell install build \
-        start dev
+				shell install build \
+				start dev inspect
 .DEFAULT_GOAL := help
 
 # This will output the help for each task. thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -45,3 +45,6 @@ start: install ## Start production server
 
 dev: ## Gulp dev fronend with hotreload
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn dev
+
+inspect: ## Starting application with flag --inspect for debugging SSR
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn inspect
