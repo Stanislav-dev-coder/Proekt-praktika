@@ -15,7 +15,7 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 Склонировать на рабочий компьютер репозиторий: `git clone git@bitbucket.org:OlegChulakovStudio/development.main.git`
 Ознакомиться с инструкцией в файле README.md этого репозитория.
 Переименовать файл `.env.example` в `.env` и указать в нем переменные
-Запустить главный контейнер командой `sh start.sh`
+Запустить главный контейнер командой `sh start-me.sh`
 
 ## Запуск контейнера
 
@@ -26,7 +26,7 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 
 После запуска контейнера откроется командная строка контейнера. Далее можно производить сборку и работу над проектом (см. п. 2.3 и далее).
 
-##  Остановка контейнера 
+##  Остановка контейнера
 
 Для остановки контейнера выйдите из командной строки используя команду `exit` и выполните скрипт `sh stop-me.sh`.
 
@@ -75,10 +75,62 @@ yarn build
 pm2 startOrRestart ecosystem.config.js
 ```
 
-# Использование линтера стилей
-Первоначально необходимо установить расширение [Manta's Stylus Supremacy](https://marketplace.visualstudio.com/items?itemName=thisismanta.stylus-supremacy) для VS Code. Затем необходимо открыть настройки VS Code и установить значение для `stylint.stylintrcPath`: `/.stylintrc`
+# Visual Studio Code
 
-Чтобы линтер срабатывал при сохранении и при вставке стилей, необходимо указать значение `true` для параметров `editor.formatOnSave` и `files.autoSave`
+## Алиасы
+
+Для перехода по алиасам в импортах, нужно в корне проекта создать файл `jsconfig.json`. Если в проекте появляется маршрут который отличается от файлового, например `@utils/*`, то нужно добавить его в свойство `path`.
+
+Для добавление или удаления алиасов в коде, нужно изменить конфиг `.babelrc`, плагин - `module-resolver`.
+
+*jsconfig.json*
+```json
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "baseUrl": "./src",
+    "module": "commonjs",
+    "paths": {
+      "*": ["./*"],
+      "@utils/*": ["./utils/*"],
+    }
+  },
+  "exclude": ["node_modules"]
+}
+```
+
+## eslint
+Для работы линтера в редакторе vscode, необходимо [установить пакеты](#markdown-header-установка) и добавить следующие строки в [глобальный settings.json](https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations) или в окружение проекта - `.vscode/settings.json`.
+
+*settings.json*
+```json
+{
+  "[javascript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+  ]
+}
+```
+
+## Использование линтера стилей
+Первоначально необходимо установить расширение [Manta's Stylus Supremacy](https://marketplace.visualstudio.com/items?itemName=thisismanta.stylus-supremacy). Для работы линтера на сохранение файла, нужно дополнить [глобальный settings.json](https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations) или `.vscode/settings.json`:
+
+*settings.json*
+```json
+{
+  "[stylus]": {
+    "editor.formatOnSave": true
+  }
+}
+```
 
 # Адаптивность #
 
@@ -119,7 +171,7 @@ pm2 startOrRestart ecosystem.config.js
 Для построения сетки используется миксин `grid-width($count, $property, $addGaps)`:
 
 * `$count` - количество колонок, которые занимает элемент (по умолчанию все 12).
-* `$property` - изменяемое свойство (по умолчанию width). 
+* `$property` - изменяемое свойство (по умолчанию width).
 * `$addGaps` - количество отступов между колонками сетки (по умолчанию 0). В `grid.json` ширина единичного отступа описана равной 30px.
 
 Например: grid-width(6, flex-basis, 1) - этот элемент будет шириной 6 колонок с промежутками в 30px (1 отступ в 30px) между ними.

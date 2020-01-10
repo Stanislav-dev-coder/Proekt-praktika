@@ -1,107 +1,92 @@
-// Vendor
 import React, { Component } from 'react';
-import Head from 'next/head';
 import PropTypes from 'prop-types';
-import cn from 'classnames';
+import cn from 'classnames/bind';
 import Router from 'next/router';
-import { addTabularEvents, removeTabularEvents } from 'utils/tabularEvents';
+import { addTabularEvents, removeTabularEvents } from '@utils/tabular-events';
 
-import PageLoader from 'components/Animations/PageLoader';
+// Componenst
 import ErrorPage from 'components/ErrorPage';
+import PageLoader from 'components/Animations/PageLoader';
 
-// Root Styles
-import '../../styles/document.styl';
 // Styles
-import './style.styl';
+import styles from './styles.styl';
 
-const formatTitle = title => {
-	const siteName = 'Site';
-	if (title) {
-		return `${title} - ${siteName}`;
-	}
-	return siteName;
-};
+const cx = cn.bind(styles);
 
 class Layout extends Component {
-	constructor(props) {
-		super(props);
+  state = {
+    routeChanging: false,
+    isRenderError: false,
+  };
 
-		this.state = {
-			renderError: false,
-		};
-	}
-	componentDidMount() {
-		window.scrollTo(0, 0);
+  componentDidMount() {
+    window.scrollTo(0, 0);
 
-		addTabularEvents();
+    addTabularEvents();
 
-		Router.router.events.on('routeChangeStart', () => {
-			this.setState({ routeChanging: true });
-		});
-		Router.router.events.on('routeChangeComplete', () => {
-			this.setState({ routeChanging: false });
-			// Скрол при смене url
-			window.scrollTo(0, 0);
-		});
-	}
+    Router.router.events.on('routeChangeStart', () => {
+      this.setState({ routeChanging: true });
+    });
 
-	componentWillUnmount() {
-		removeTabularEvents();
-	}
+    Router.router.events.on('routeChangeComplete', () => {
+      this.setState({ routeChanging: false });
+      window.scrollTo(0, 0); // Скрол при смене url
+    });
+  }
 
-	componentDidCatch() {
-		this.setState({
-			renderError: true,
-		});
-	}
+  componentWillUnmount() {
+    removeTabularEvents();
+  }
 
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.renderError) {
-			this.setState({
-				renderError: false,
-			});
-		}
-	}
+  componentDidCatch() {
+    this.setState({
+      isRenderError: true,
+    });
+  }
 
-	getHttpStatus() {
-		return this.state.renderError ? 'Упс! Что-то пошло не так...' : this.props.httpStatus;
-	}
+  componentDidUpdate(_prevProps, prevState) {
+    if (prevState.isRenderError) {
+      this.setState({
+        isRenderError: false,
+      });
+    }
+  }
 
-	render() {
-		const { className, children, title } = this.props;
-		const classNames = cn('Layout', className);
-		const httpStatus = this.getHttpStatus();
+  /** Получение статуса ошибки с учетом ошибки в JS.
+   * @return {{ isSuccessful: boolean, statusCode: number }}
+   */
+  getPageStatus() {
+    return {
+      isSuccessful: !this.state.isRenderError && this.props.isSuccessful,
+      statusCode: this.state.isRenderError ? 418 : this.props.statusCode,
+    };
+  }
 
-		return (
-			<div className={classNames}>
-				<Head>
-					<title>{formatTitle(title)}</title>
-				</Head>
-				<PageLoader in={this.state.routeChanging} />
-				{/* <Header /> */}
-				<main className="Layout__content">
-					{httpStatus === 200 ? children : <ErrorPage httpStatus={httpStatus} />}
-				</main>
-				{/* <Footer /> */}
-			</div>
-		);
-	}
+  render() {
+    const { children, className } = this.props;
+    const { isSuccessful, statusCode } = this.getPageStatus();
+
+    return (
+      <div className={cx('Layout', className)}>
+        <PageLoader in={this.state.routeChanging} />
+
+        <main className={cx('Layout__content')}>
+          {isSuccessful ? children : <ErrorPage statusCode={statusCode} />}
+        </main>
+      </div>
+    );
+  }
 }
 
-Layout.defaultProps = {
-	className: '',
-	title: '',
-	navCategory: 'individuals',
-	animated: false,
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  statusCode: PropTypes.number.isRequired,
+  isSuccessful: PropTypes.bool.isRequired,
+  className: PropTypes.string,
 };
 
-Layout.propTypes = {
-	className: PropTypes.string,
-	children: PropTypes.node.isRequired,
-	navCategory: PropTypes.string,
-	title: PropTypes.string,
-	animated: PropTypes.bool,
-	httpStatus: PropTypes.number,
+Layout.defaultProps = {
+  className: null,
 };
 
 export default Layout;

@@ -1,29 +1,25 @@
-/*** --- Reset CSS --- ***/
+/* ** --- Reset CSS --- ** */
 @import 'reset.styl'
 
-/*** --- Box sizing --- ***/
+/* ** --- Box sizing --- ** */
 *, *:before, *:after {
   box-sizing border-box
 }
 
-/*** --- Fonts --- ***/
-// webfont('Bebas', 'BebasNeue-Regular')
-// webfont('Bebas', 'BebasNeue-Bold', bold)
-
-/*** --- Document --- ***/
-html,
-body {
-  height 100%
-  background $bgColor
+/* ** --- Fonts --- ** */
+/* ** --- Document --- ** */
+html, body {
+  min-height 100%
+  font normal $fontSize / $lineHeight $fontFamily
   color $textColor
-  font normal $fontSize/$lineHeight $fontFamily
+  background $bgColor
   -webkit-text-size-adjust 100%
   -moz-osx-font-smoothing grayscale
   -webkit-font-smoothing antialiased
 }
 
-/*** --- Links --- ***/
+/* ** --- Links --- ** */
 a {
-  color $linkColor
   text-decoration none
+  color $linkColor
 }

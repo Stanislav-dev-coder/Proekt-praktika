@@ -1,40 +1,67 @@
-import React, { Component } from 'react';
-import { gsap } from 'gsap';
+import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import anim from '@utils/animation';
 
 import Transition from 'react-transition-group/Transition';
 
-const DUR = 300;
+const DEFAULT_STYLE = {
+  opacity: 0,
+};
 
-class Slide extends Component {
-	onEnter = node => {
-		const duration = (this.props.duration || DUR) / 1000;
-		gsap.killTweensOf(node);
-		gsap.fromTo(node, duration, { opacity: 0 }, { opacity: 1 });
-	};
-	onExit = node => {
-		const duration = (this.props.duration || DUR) / 1000;
-		gsap.killTweensOf(node);
-		gsap.to(node, duration, { opacity: 0 });
-	};
-	onEntered = node => {
-		gsap.set(node, { clearProps: 'opacity' });
-	};
-	render() {
-		const { in: inProp, duration, children } = this.props;
+/** Анимация появления элемента по флагу in.
+ * @type {(props: Fade.propTypes) => React.Component}
+ */
+const Fade = ({ in: inProp, duration, children, className }) => {
+  /** Обработчик для появления элемента.
+   * @type {(node: Node) => void}
+   */
+  const onEnter = useCallback(
+    node => {
+      anim.remove(node);
+      anim(node, {
+        duration,
+        opacity: 1,
+        ease: 'easeOut',
+      });
+    },
+    [duration],
+  );
 
-		return (
-			<Transition
-				in={inProp}
-				timeout={duration || DUR}
-				onEnter={this.onEnter}
-				onExit={this.onExit}
-				onEntered={this.onEntered}
-				unmountOnExit
-				mountOnEnter>
-				{children}
-			</Transition>
-		);
-	}
-}
+  /** Обработчик для скрытия элемента.
+   * @type {(node: Node) => void}
+   */
+  const onExit = useCallback(
+    node => {
+      anim.remove(node);
+      anim(node, {
+        duration,
+        opacity: 0,
+        ease: 'easeIn',
+      });
+    },
+    [duration],
+  );
 
-export default Slide;
+  return (
+    <Transition in={inProp} timeout={duration} mountOnEnter onEnter={onEnter} onExit={onExit}>
+      <div className={className} style={DEFAULT_STYLE}>
+        {children}
+      </div>
+    </Transition>
+  );
+};
+
+Fade.propTypes = {
+  in: PropTypes.bool,
+  duration: PropTypes.number,
+  children: PropTypes.any.isRequired,
+  className: PropTypes.string,
+};
+
+Fade.defaultProps = {
+  in: false,
+  duration: 300,
+  className: null,
+};
+
+export default Fade;

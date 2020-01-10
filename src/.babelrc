@@ -5,9 +5,11 @@
       {
         "preset-env": {
           "useBuiltIns": "usage",
-          "corejs": 3
+          "corejs": {
+            "version": 3,
+            "proposals": true
+          }
         },
-        "transform-runtime": {},
         "class-properties": {}
       }
     ]
@@ -33,26 +35,17 @@
     [
       "module-resolver",
       {
-        "root": [
-          "./"
-        ],
+        "root": [ "./" ],
         "alias": {
           "components": "./components",
           "config": "./config",
-          "containers": "./containers",
           "pages": "./pages",
+          "server": "./server",
           "store": "./store",
-          "lib": "./lib",
           "locales": "./locales",
-          "utils": "./utils",
-          "static": "./static"
+          "static": "./static",
+          "@utils": "./utils"
         }
-      }
-    ],
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        "legacy": true
       }
     ]
   ]

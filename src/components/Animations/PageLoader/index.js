@@ -1,53 +1,99 @@
-import React, { Component } from 'react';
-import { gsap } from 'gsap';
+import React, { useRef, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import cn from 'classnames/bind';
+import anim from '@utils/animation';
 
 import Transition from 'react-transition-group/Transition';
 
-import './styles.styl';
+// Styles
+import styles from './styles.styl';
 
-const DUR = 300;
+const cx = cn.bind(styles);
 
-class PageLoader extends Component {
-	onEnter = node => {
-		if (this.tl) this.tl.pause();
-		gsap.killTweensOf(node);
-		gsap.killTweensOf(this.line);
+const FADE_DURATION = 300;
+const STEP_1_DURATION = 600;
+const STEP_2_DURATION = 1500;
+const STEP_3_DURATION = 5000;
 
-		const duration = (this.props.duration || DUR) / 1000;
-		gsap.fromTo(node, duration, { autoAlpha: 0 }, { autoAlpha: 1 });
+/** @type {(props: PageLoader.propTypes) => React.Component}*/
+const PageLoader = ({ in: inProp }) => {
+  const loaderRef = useRef();
+  const lineRef = useRef();
 
-		this.tl = gsap.timeline();
-		this.tl
-			.fromTo(this.line, 0.2, { x: '-100%' }, { x: '-40%', ease: 'power2.inOut' })
-			.to(this.line, 2, { x: '-10%', ease: 'none' });
-	};
-	onExit = node => {
-		if (this.tl) this.tl.pause();
-		gsap.killTweensOf(node);
-		gsap.killTweensOf(this.line);
+  /** @type {(node: Node) => void} */
+  const killAnimations = useCallback(() => {
+    anim.remove(loaderRef.current);
+    anim.remove(lineRef.current);
+  }, []);
 
-		this.tl = gsap.timeline();
-		const duration = (this.props.duration || DUR) / 1000;
-		this.tl
-			.to(this.line, duration, { x: '0%', ease: 'power2.inOut' })
-			.to(node, duration, { autoAlpha: 0 }, '-=0.1');
-	};
+  /** Движение лоадера до 90%
+   * @type {(node: Node) => void}
+   */
+  const onEnter = useCallback(() => {
+    killAnimations();
 
-	getLineRef = node => {
-		if (node) this.line = node;
-	};
+    anim
+      .timeline({
+        targets: lineRef.current,
+      })
+      .add({
+        opacity: [0, 1],
+        duration: FADE_DURATION,
+        easing: 'linear',
+      })
+      .add({
+        translateX: ['-100%', '-40%'],
+        duration: STEP_1_DURATION,
+        easing: 'easeInCubic',
+      })
+      .add({
+        translateX: '-20%',
+        duration: STEP_2_DURATION,
+        easing: 'easeOutCubic',
+      })
+      .add({
+        translateX: '-10%',
+        duration: STEP_3_DURATION,
+        easing: 'easeInSine',
+      });
+  }, [killAnimations]);
 
-	render() {
-		const { in: inProp, duration, children } = this.props;
+  /**
+   * Быстрое движение лоадера в конец.
+   * @type {(node: Node) => void}
+   */
+  const onExit = useCallback(() => {
+    killAnimations();
 
-		return (
-			<Transition in={inProp} timeout={duration || DUR} onEnter={this.onEnter} onExit={this.onExit}>
-				<div className="PageLoader">
-					<div className="PageLoader__line" ref={this.getLineRef} />
-				</div>
-			</Transition>
-		);
-	}
-}
+    anim(lineRef.current, {
+      opacity: [1, 0],
+      translateX: 0,
+      duration: FADE_DURATION,
+      easing: 'linear',
+    });
+  }, [killAnimations]);
+
+  useEffect(() => {
+    return () => {
+      killAnimations();
+    };
+  }, [killAnimations]);
+
+  return (
+    <Transition in={inProp} timeout={FADE_DURATION} onEnter={onEnter} onExit={onExit}>
+      <div ref={loaderRef} className={cx('PageLoader')}>
+        <div className={cx('PageLoader__line')} ref={lineRef} />
+      </div>
+    </Transition>
+  );
+};
+
+PageLoader.propTypes = {
+  in: PropTypes.bool,
+};
+
+PageLoader.defaultProps = {
+  in: false,
+};
 
 export default PageLoader;

@@ -1,37 +1,56 @@
-const webpack = require('webpack');
-const withStylus = require('@zeit/next-stylus');
-const withCSS = require('@zeit/next-css');
-const path = require('path');
 require('dotenv').config();
-const dev = process.env.NODE_ENV !== 'production';
+
+const bundleAnalyzer = require('@next/bundle-analyzer');
+const path = require('path');
+const withCSS = require('@zeit/next-css');
+const withStylus = require('@zeit/next-stylus');
 const poststylus = require('poststylus');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
+const withAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZER == 1,
+});
+
+const IS_DEV_MODE = process.env.NODE_ENV !== 'production';
+const COMMON_STYES = path.resolve('styles/common.styl');
+const ASSET_PREFIX = process.env.ASSET_PREFIX || '';
+
 const config = {
-	webpack: function(config) {
-		config.module.rules.push({
-			test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
-			use: {
-				loader: 'url-loader',
-				options: {
-					limit: 100000,
-					name: '[name].[ext]',
-				},
-			},
-		});
-		if (!dev) {
-			config.plugins.push(new CssoWebpackPlugin());
-		}
-		return config;
-	},
-	stylusLoaderOptions: {
-		import: path.resolve('styles/common.styl'),
-		use: [poststylus([require('autoprefixer')()])],
-	},
-	env: {
-		IS_PROD: !dev,
-		API_URL: process.env.API_URL,
-	},
+  assetPrefix: ASSET_PREFIX,
+  useFileSystemPublicRoutes: false,
+  webpack: function(config) {
+    config.module.rules.push({
+      test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
+      use: {
+        loader: 'url-loader',
+        options: {
+          limit: 100000,
+          name: '[name].[ext]',
+        },
+      },
+    });
+
+    if (!IS_DEV_MODE) {
+      config.plugins.push(new CssoWebpackPlugin());
+    }
+
+    return config;
+  },
+  cssModules: true,
+  cssLoaderOptions: {
+    importLoaders: true,
+    localIdentName: IS_DEV_MODE ? '[local]___[hash:base64:5]' : '[hash:base64:5]',
+  },
+  stylusLoaderOptions: {
+    import: COMMON_STYES,
+    use: [poststylus([require('autoprefixer')()])],
+    define: { ASSET_PREFIX },
+  },
+  env: {
+    IS_PROD: !IS_DEV_MODE,
+    API_URL: process.env.API_URL,
+    ASSET_PREFIX: ASSET_PREFIX,
+  },
 };
 
-module.exports = withCSS(withStylus(config));
+module.exports = withAnalyzer(withCSS(withStylus(config)));

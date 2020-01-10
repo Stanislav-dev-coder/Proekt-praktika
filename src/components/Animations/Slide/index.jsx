@@ -1,60 +1,100 @@
-import React, { Component } from 'react';
-import { gsap } from 'gsap';
+import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import anim from '@utils/animation';
 
+// Components
 import Transition from 'react-transition-group/Transition';
 
-const DUR = 300;
+const DEFAULT_STYLE = {
+  opacity: 0,
+};
 
-class Slide extends Component {
-	onEnter = node => {
-		const slideItems = node.querySelectorAll('.anim-slideItem');
-		const reverseItems = Array.prototype.map.call(slideItems, item => item).reverse();
+/** Анимация появления списка.
+ *
+ * Для stagger эффекта у дочерних элементов должен
+ * быть класс `.anim-slideItem`, который можно переназначить
+ * пропсом - staggerClass
+ *
+ * @type {(props: Slide.propTypes) => React.Component}
+ * @example
+ * <Slide in={isOpenSlide} duration={350} stagger={30}>
+ *      <ul>
+ *        <li className="anim-slideItem">Item 1</li>
+ *        <li className="anim-slideItem">Item 2</li>
+ *        ...
+ * </Slide>
+ */
+const Slide = ({ in: inProp, duration, staggerDuration, staggerClass, children, className }) => {
+  /** Открытие слайда.
+   * @type {(node: Node) => void}
+   */
+  const onEnter = useCallback(
+    node => {
+      const slideItems = node.querySelectorAll(`.${staggerClass}`);
+      const reverseItems = Array.prototype.map.call(slideItems, item => item).reverse();
 
-		const duration = (this.props.duration || DUR) / 1000;
-		gsap.killTweensOf(node);
-		gsap.fromTo(
-			node,
-			duration,
-			{ height: 0, opacity: 0 },
-			{ height: node.scrollHeight, opacity: 1, ease: 'power1.easeOut' },
-		);
-		if (slideItems) {
-			gsap.killTweensOf(slideItems);
-			gsap.staggerFromTo(
-				reverseItems,
-				duration,
-				{ y: -15, opacity: 0 },
-				{ y: 0, opacity: 1, ease: 'power1.easeOut' },
-				0.03,
-			);
-		}
-	};
-	onExit = node => {
-		const duration = (this.props.duration || DUR) / 1000;
-		gsap.killTweensOf(node);
-		gsap.to(node, duration, { height: 0, opacity: 0, ease: 'power1.easeOut' });
-	};
-	onEntered = node => {
-		const slideItems = node.querySelectorAll('.anim-slideItem');
-		gsap.set(node, { clearProps: 'height, opacity' });
-		gsap.set(slideItems, { clearProps: 'transform, opacity' });
-	};
-	render() {
-		const { in: inProp, duration, children } = this.props;
+      anim.remove(node);
+      anim(node, {
+        duration,
+        height: [0, node.scrollHeight],
+        opacity: [0, 1],
+        easing: 'easeOutSine',
+      });
 
-		return (
-			<Transition
-				in={inProp}
-				timeout={duration || DUR}
-				onEnter={this.onEnter}
-				onExit={this.onExit}
-				onEntered={this.onEntered}
-				unmountOnExit
-				mountOnEnter>
-				{children}
-			</Transition>
-		);
-	}
-}
+      if (slideItems.length) {
+        anim.remove(slideItems);
+        anim(reverseItems, {
+          duration,
+          translateY: [-15, 0],
+          opacity: [0, 1],
+          ease: 'easeOutQuint',
+          delay: anim.stagger(staggerDuration),
+        });
+      }
+    },
+    [duration, staggerClass, staggerDuration],
+  );
+
+  /** Закрытие слайда.
+   * @type {(node: Node) => void}
+   */
+  const onExit = useCallback(
+    node => {
+      anim.remove(node);
+      anim(node, {
+        duration,
+        height: 0,
+        opacity: 0,
+        ease: 'easeInSine',
+      });
+    },
+    [duration],
+  );
+
+  return (
+    <Transition in={inProp} timeout={duration} mountOnEnter onEnter={onEnter} onExit={onExit}>
+      <div className={className} style={DEFAULT_STYLE}>
+        {children}
+      </div>
+    </Transition>
+  );
+};
+
+Slide.propTypes = {
+  in: PropTypes.bool,
+  duration: PropTypes.number,
+  staggerDuration: PropTypes.number,
+  children: PropTypes.any.isRequired,
+  staggerClass: PropTypes.string,
+  className: PropTypes.string,
+};
+
+Slide.defaultProps = {
+  in: false,
+  duration: 300,
+  staggerDuration: 30,
+  staggerClass: 'anim-slideItem',
+  className: null,
+};
 
 export default Slide;
