@@ -15,8 +15,8 @@ docker_bin := $(shell command -v docker 2> /dev/null)
 docker_compose_bin := $(shell command -v docker-compose 2> /dev/null)
 
 .PHONY : help up down \
-				shell install build \
-				start dev inspect
+		shell install build \
+		start dev inspect
 .DEFAULT_GOAL := help
 
 # This will output the help for each task. thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -32,7 +32,7 @@ down: ## Stop all started for development containers
 	$(docker_compose_bin) down
 
 shell: up ## Start shell into application container
-	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" /bin/sh
+	$(docker_compose_bin) exec -it "$(APP_CONTAINER_NAME)" /bin/sh
 
 install: up ## Install dependency
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
@@ -40,11 +40,11 @@ install: up ## Install dependency
 build: install ## Build
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn build
 
-start: install ## Start production server
+start: build ## Start production server
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn start
 
-dev: ## Gulp dev fronend with hotreload
+dev: up ## Node dev frontend
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn dev
 
-inspect: ## Starting application with flag --inspect for debugging SSR
+inspect: up ## Starting application with flag --inspect for debugging SSR
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn inspect

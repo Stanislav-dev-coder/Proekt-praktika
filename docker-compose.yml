@@ -12,7 +12,7 @@ services:
   &app-service app: &app-service-template
     image: ci.chulakov.ru:5000/chulakov/node:latest
     user: ${UID}:${GID}
-    environment:
+    environment: &app-service-envs
       VIRTUAL_HOST: "${VIRTUAL_HOST}"
       API_URL: "${API_URL}"
       PORT: "${PORT}"
@@ -29,7 +29,7 @@ services:
       - web-projects
 
   # NGINX container with proxy
-  &web-service nginx-app:
+  nginx-app: &nginx-service-template
     image: ci.chulakov.ru:5000/chulakov/nginx-proxy:latest
     logging:
       driver: "json-file"
