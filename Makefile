@@ -48,3 +48,6 @@ dev: up ## Node dev frontend
 
 inspect: up ## Starting application with flag --inspect for debugging SSR
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn inspect
+
+test: up ## Starting all tests
+	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn test
