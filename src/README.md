@@ -1,15 +1,31 @@
-# Основная информация
-Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js 10.15
-Стили задаются с использованием препроцессора Stylus (http://stylus-lang.com).
-При написании стилей мы используем методологию БЭМ (https://ru.bem.info/methodology/quick-start).
+# React Frontend Template
 
-# Тестирование #
+![](https://img.shields.io/badge/version-2.0.0-blue)
+![](https://img.shields.io/badge/size-419Kb-critical)
+![](https://img.shields.io/badge/gzip-140Kb-orange)
+![](https://img.shields.io/badge/node-12.14.1-green)
+![](https://img.shields.io/badge/react-16.12.0-inactive)
+![](https://img.shields.io/badge/next-9.1.3-inactive)
 
-Для тестирования используются библиотеки Jest и Enzyme. По умолчанию все тесты запускаются командой `yarn test`. Для того что бы запустить конкретный тест, нужно после команды запуска дописать путь к этому файлу `yarn test ./path/to/filename.test.js`. Если нужно запустить все тесты в конкретной директории, можно воспользоваться такой записью `yarn test ./directory/.*.test.js`, в этом случае будут протестированы все файлы .*.test.js в папка, подпапках и внутри данной директории.
+Server-Side сборка с использованием фреймворка [NextJS](https://nextjs.org/).
+<br />
+Стили задаются с использованием препроцессора [Stylus](http://stylus-lang.com). При написании стилей используеется методология [БЭМ](https://ru.bem.info/methodology/quick-start).
 
-# Visual Studio Code
+## Тестирование
+### Unit Тесты
 
-## Алиасы
+```bash
+$ make test # Команда для запуска
+```
+
+Для unit тестов используются библиотеки [Jest](https://jestjs.io/) и [Enzyme](https://airbnb.io/enzyme/).
+
+Для того что бы запустить конкретный тест, нужно после команды запуска дописать путь к этому файлу `yarn test ./path/to/filename.test.js`.
+
+Если нужно запустить все тесты в конкретной директории, можно воспользоваться такой записью `yarn test ./directory/.*.test.js`
+
+## Visual Studio Code
+### Алиасы
 
 Для перехода по алиасам в импортах, нужно в корне проекта создать файл `jsconfig.json`. Если в проекте появляется маршрут который отличается от файлового, например `@utils/*`, то нужно добавить его в свойство `path`.
 
@@ -33,7 +49,8 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 }
 ```
 
-## eslint
+### eslint
+
 Для работы линтера в редакторе vscode, необходимо [установить пакеты](#markdown-header-установка) и добавить следующие строки в [глобальный settings.json](https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations) или в окружение проекта - `.vscode/settings.json`.
 
 *settings.json*
@@ -52,7 +69,8 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 }
 ```
 
-## Использование линтера стилей
+### Использование линтера стилей
+
 Первоначально необходимо установить расширение [Manta's Stylus Supremacy](https://marketplace.visualstudio.com/items?itemName=thisismanta.stylus-supremacy). Для работы линтера на сохранение файла, нужно дополнить [глобальный settings.json](https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations) или `.vscode/settings.json`:
 
 *settings.json*
@@ -64,31 +82,27 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 }
 ```
 
-# Тестирование #
+## Адаптивность
 
-Для тестирования используются библиотеки Jest и Enzyme. По умолчанию все тесты запускаются командой `yarn test`. Для того что бы запустить конкретный тест, нужно после команды запуска дописать путь к этому файлу `yarn test ./path/to/filename.test.js`. Если нужно запустить все тесты в конкретной директории, можно воспользоваться такой записью `yarn test ./directory/.*.test.js`, в этом случае будут протестированы все файлы .*.test.js в папка, подпапках и внутри данной директории.
+Контрольные точки для адаптивности настраиваются в файлах **./config/breakpoints.json** (для Desktop First) и **./config/breakpoints-mf.json** (для Mobile First).
 
-# Адаптивность #
-
-Контрольные точки для адаптивности настраиваются в файлах **source/config/breakpoints.json** (для Desktop First) и **source/config/breakpoints-mf.json** (для Mobile First).
-
-Пример брекпоинта для Desktop First: наличие в файле **source/config/breakpoints.json** строчки `"notebook": 1440` добавляет в Stylus переменную `$notebook` равную `(max-width: 1440px)`.
+Пример брекпоинта для Desktop First: наличие в файле **./config/breakpoints.json** строчки `"notebook": 1440` добавляет в Stylus переменную `$notebook` равную `(max-width: 1440px)`.
 Эту переменную можно использовать вот так: `@media $notebook { ... }`.
 
-Пример брекпоинта для Mobile First: наличие в файле **source/config/breakpoints-mf.json** строчки `"mfNotebook": 1200` добавляет в Stylus переменную `$mfNotebook` равную `(min-width: 1200)`.
+Пример брекпоинта для Mobile First: наличие в файле **./config/breakpoints-mf.json** строчки `"mfNotebook": 1200` добавляет в Stylus переменную `$mfNotebook` равную `(min-width: 1200)`.
 Эту переменную можно использовать вот так: `@media $mfNotebook { ... }`.
 
 Кроме того, в медиа-запросах можно использовать переменные `$landscape` и `$portrait` (вот так: `@media $landscape { ... }`), а для Ретины используется медиа-запрос `@media $retina { ... }`
 
 
-# Цвета #
+## Цвета
 
-Цвета указанные в файле **source/config/colors.json** доступны в Stylus как `$#NAME#Color`.
+Цвета указанные в файле **./config/colors.json** доступны в Stylus как `$#NAME#Color`.
 
 Например, `linkHover` будет доступен в Stylus как `$linkHoverColor`, а в JS как `app.config.colors.linkHover`.
 
 
-# Миксины #
+## Миксины
 
 В sytlus-коде доступны следующие миксины:
 
@@ -101,7 +115,7 @@ Server-side сборка на основе Next.js 9.1.3, React 16.11.0, Node.js
 * `grid-width($count, $property, $addGaps)` — используется для построения сетки (см. ниже).
 
 
-# Сетка #
+## Сетка
 
 (Работает для Desktop first)
 Для построения сетки используется миксин `grid-width($count, $property, $addGaps)`:

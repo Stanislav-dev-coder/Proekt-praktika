@@ -1,6 +1,6 @@
 {
-  "name": "react.next.frontend",
-  "version": "1.0.0",
+  "name": "react-frontend-template",
+  "version": "2.0.0",
   "description": "",
   "scripts": {
     "dev": "node server/index.js",
@@ -46,6 +46,7 @@
     "@zeit/next-stylus": "1.0.1",
     "animejs": "^3.1.0",
     "autoprefixer": "^9.7.1",
+    "axios": "^0.19.2",
     "babel-plugin-inline-react-svg": "^1.0.1",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
