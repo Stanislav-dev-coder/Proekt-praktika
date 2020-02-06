@@ -19,7 +19,7 @@ const SUCCESS_CODE = 200;
  *  }
  * @param {{ req: Request, res: Response, store: any }} ctx
  * @param {() => Promise<any>} requestFunction
- * @returns {{statusCode: number, isSuccessful: boolean, componentProps: any}
+ * @returns {{statusCode: number, isSuccessful: boolean, pageProps: any}
  */
 export default function handleResponseStatus(ctx, requestFunction) {
   let statusCode =
@@ -30,7 +30,7 @@ export default function handleResponseStatus(ctx, requestFunction) {
     return {
       statusCode,
       isSuccessful: false,
-      componentProps: {
+      pageProps: {
         status: statusCode,
       },
     };
@@ -40,10 +40,14 @@ export default function handleResponseStatus(ctx, requestFunction) {
     .then(result => ({
       statusCode,
       isSuccessful: true,
-      componentProps: (result && result[0]) || {},
+      pageProps: (result && result[0]) || {},
     }))
     .catch(error => {
       const errorCode = error.status || error.statusCode || statusCode;
+
+      if (process.env.NODE_ENV === 'development') {
+        if (!error) console.error('reject should be not null');
+      }
 
       if (ctx.res) {
         ctx.res.statusCode = errorCode;
@@ -52,7 +56,7 @@ export default function handleResponseStatus(ctx, requestFunction) {
       return {
         statusCode: errorCode,
         isSuccessful: false,
-        componentProps: error,
+        pageProps: error,
       };
     });
 }
