@@ -37,7 +37,7 @@ services:
         max-file: "2"
         max-size: "5m"
     restart: on-failure
-    container_name: ${VIRTUAL_HOST}-web
+    container_name: ${VIRTUAL_HOST}-nginx
     environment:
       REMOTE_HOST: ${VIRTUAL_HOST}-app
       REMOTE_PORT: "${PORT}"
