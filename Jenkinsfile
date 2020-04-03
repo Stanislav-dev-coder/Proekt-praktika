@@ -71,7 +71,7 @@ pipeline {
                         -e "PORT=${PORT}" \
                         -e "NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}" \
                         --network="${VIRTUAL_HOST}-backend-network" \
-                        ci.chulakov.ru:5000/chulakov/node:latest tail -f /dev/null
+                        ci.chulakov.ru:5000/chulakov/node:latest yarn start
                 '''
                 echo 'Запуск проксирующего NGINX-a'
                 sh '''
