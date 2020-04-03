@@ -66,10 +66,10 @@ pipeline {
                         --log-opt max-file=2 \
                         --log-opt max-size=5m \
                         --volume="$(pwd)/src:/app:rw" \
-                        -e "VIRTUAL_HOST=${VIRTUAL_HOST}"
-                        -e "API_URL=${API_URL}"
-                        -e "PORT=${PORT}"
-                        -e "NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}"
+                        -e "VIRTUAL_HOST=${VIRTUAL_HOST}" \
+                        -e "API_URL=${API_URL}" \
+                        -e "PORT=${PORT}" \
+                        -e "NEXT_TELEMETRY_DISABLED=${NEXT_TELEMETRY_DISABLED}" \
                         --network="${VIRTUAL_HOST}-backend-network" \
                         ci.chulakov.ru:5000/chulakov/node:latest tail -f /dev/null
                 '''
