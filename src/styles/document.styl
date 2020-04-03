@@ -1,0 +1,25 @@
+/* ** --- Reset CSS --- ** */
+@import 'reset.styl'
+
+/* ** --- Box sizing --- ** */
+*, *:before, *:after {
+  box-sizing border-box
+}
+
+/* ** --- Fonts --- ** */
+/* ** --- Document --- ** */
+html, body {
+  min-height 100%
+  font normal $fontSize / $lineHeight $fontFamily
+  color $textColor
+  background $bgColor
+  -webkit-text-size-adjust 100%
+  -moz-osx-font-smoothing grayscale
+  -webkit-font-smoothing antialiased
+}
+
+/* ** --- Links --- ** */
+a {
+  text-decoration none
+  color $linkColor
+}

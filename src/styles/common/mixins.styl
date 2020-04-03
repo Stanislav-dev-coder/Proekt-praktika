@@ -1,0 +1,135 @@
+// placeholder color
+placeholder($color) {
+  &::placeholder {
+    color $color
+    opacity 1
+  }
+}
+
+// faster transition
+faster() {
+  transition-duration ($duration/ 2)
+}
+
+// clearfix
+clearfix() {
+  &:after {
+    display block
+    content ''
+    height 0
+    overflow hidden
+    clear both
+  }
+}
+
+// fullsize
+fullsize() {
+  position absolute
+  left 0
+  top 0
+  width 100%
+  height 100%
+}
+
+// font-face
+webfont($family, $file, $weight = normal, $style = normal) {
+  @font-face {
+    font-family $family
+    src url('/static/fonts/'+$file+'.woff') format('woff'),
+    url('/static/fonts/'+$file+'.woff') format('woff2')
+    font-weight $weight
+    font-style $style
+  }
+}
+
+// cursor grab
+cursor-grab() {
+  cursor move
+  cursor grab
+}
+
+// cursor grabbing
+cursor-grabbing() {
+  cursor move
+  cursor grabbing
+}
+
+// extend default clickable zone
+clickZone($sizeZone = 10px) {
+  position relative
+  &:before {
+    content ''
+    position absolute
+    top ($sizeZone * -1)
+    right ($sizeZone * -1)
+    left ($sizeZone * -1)
+    bottom ($sizeZone * -1)
+    cursor pointer
+  }
+}
+
+// disable last margin
+disable-last-margin() {
+  &:last-child {
+    margin-bottom 0
+    margin-right 0
+  }
+}
+
+disable-last-margin-right() {
+  &:last-child {
+    margin-right 0
+  }
+}
+
+disable-last-margin-bottom() {
+  &:last-child {
+    margin-bottom 0
+  }
+}
+
+// grid
+grid-width-default($count = $columns, $property = width, $addGaps = 0) {
+  @media $withoutPhone {
+    {$property}: get-grid-width('default', $count, $addGaps)
+  }
+}
+
+grid-width-notebook($count = $columns, $property = width, $addGaps = 0) {
+  @media $notebookWithoutPhone {
+    {$property}: get-grid-width('notebook', $count, $addGaps)
+  }
+}
+
+grid-width-tablet($count = $columns, $property = width, $addGaps = 0) {
+  @media $tabletWithoutPhone {
+    {$property}: get-grid-width('tablet', $count, $addGaps)
+  }
+}
+
+grid-width-vertical-tablet($count = $columns, $property = width, $addGaps = 0) {
+  @media $verticalTabletWithoutPhone {
+    {$property}: get-grid-width('verticalTablet', $count, $addGaps)
+  }
+}
+
+grid-width($count = $columns, $property = width, $addGaps = 0) {
+  grid-width-default($count, $property, $addGaps)
+  grid-width-notebook($count, $property, $addGaps)
+  grid-width-tablet($count, $property, $addGaps)
+  grid-width-vertical-tablet($count, $property, $addGaps)
+}
+
+// container
+container() {
+  & {
+    grid-width()
+    margin-left auto
+    margin-right auto
+  }
+  @media $phone {
+    width auto
+    margin-left $phoneSpaceX
+    margin-right $phoneSpaceX
+  }
+}

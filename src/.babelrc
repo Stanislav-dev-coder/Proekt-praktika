@@ -1,0 +1,52 @@
+{
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": {
+          "useBuiltIns": "usage",
+          "corejs": {
+            "version": 3,
+            "proposals": true
+          }
+        },
+        "class-properties": {}
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "inline-react-svg",
+      {
+        "svgo": {
+          "plugins": [
+            {
+              "removeAttrs": {
+                "attrs": "(data-name)"
+              }
+            },
+            {
+              "cleanupIDs": false
+            }
+          ]
+        }
+      }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": [ "./" ],
+        "alias": {
+          "components": "./components",
+          "config": "./config",
+          "pages": "./pages",
+          "server": "./server",
+          "store": "./store",
+          "locales": "./locales",
+          "static": "./static",
+          "@utils": "./utils"
+        }
+      }
+    ]
+  ]
+}
