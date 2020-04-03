@@ -60,7 +60,7 @@ pipeline {
                     docker run \
                         -itd \
                         --name="${VIRTUAL_HOST}-app" \
-                        --working_dir="/app"
+                        --workdir="/app"
                         --user=${UID}:${GID} \
                         --log-driver=json-file \
                         --log-opt max-file=2 \
