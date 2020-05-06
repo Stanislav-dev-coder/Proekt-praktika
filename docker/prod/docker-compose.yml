@@ -1,0 +1,57 @@
+version: '3.2'
+
+networks:
+  web-projects:
+    external:
+       name: ${EXTERNAL_NETWORK_NAME}
+
+services:
+  # Nextjs applicaton container
+  &app-service app: &app-service-template
+    image: ci.chulakov.ru:5000/chulakov/node:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    restart: always
+    # user: ${UID}:${GID}
+    environment: &app-service-envs
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      API_URL: "${API_URL}"
+      PORT: "${PORT}"
+      NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
+      CHAT_URL: "${CHAT_URL}"
+    # for keep alive container
+    command: ["yarn", "start"]
+    volumes:
+      - ./../../src:/app:rw
+    container_name: ${VIRTUAL_HOST}-app
+    working_dir: "/app"
+    # ports: ["${PORT}:${PORT}", "9229:9229"]
+    external_links:
+      - "${MAIN_PROXY_CONTAINER}:api.dom.tele2.ru"
+      # - "${MAIN_PROXY_CONTAINER}:chat.dom.tele2.ru"
+    networks:
+      - web-projects
+
+  # NGINX container with proxy
+  nginx-app: &nginx-service-template
+    image: ci.chulakov.ru:5000/chulakov/nginx-proxy:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    restart: always
+    container_name: ${VIRTUAL_HOST}-nginx
+    environment:
+      REMOTE_HOST: ${VIRTUAL_HOST}-app
+      REMOTE_PORT: "${PORT}"
+      ROOT_DIR: '/app'
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      # LETSENCRYPT_HOST: "${VIRTUAL_HOST}"
+    volumes:
+      - ./../../src:/app:ro
+    networks:
+      - web-projects

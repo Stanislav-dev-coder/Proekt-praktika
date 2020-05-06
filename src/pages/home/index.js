@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Link from '@utils/router/Link';
+import Link from '@ch/next-router/Link';
+import Page from 'components/environment/Page';
 
 const HomePage = () => {
   const title = useSelector(state => state.home.title);
-
   return (
-    <div>
+    <Page>
       <h1>Title:: {title}</h1>
 
       <Link>empty</Link>
@@ -31,7 +31,7 @@ const HomePage = () => {
       <br />
       <Link href="/lk/test/kit">/lk/test/kit</Link>
       <br />
-    </div>
+    </Page>
   );
 };
 

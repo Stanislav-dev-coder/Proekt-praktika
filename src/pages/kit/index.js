@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import cn from 'classnames/bind';
 
 // Components
-import Link from '@utils/router/Link';
-import ErrorPage from 'components/ErrorPage';
-import { Fade, Slide } from 'components/Animations';
-import PageLoader from 'components/Animations/PageLoader';
+import Link from '@ch/next-router/Link';
+import ErrorPage from 'components/base/ErrorPage';
+import { Fade, Slide } from 'components/base/Animations';
+import PageLoader from 'components/base/Animations/PageLoader';
 
 // Styles
 import styles from './styles.styl';

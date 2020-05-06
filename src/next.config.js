@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const bundleAnalyzer = require('@next/bundle-analyzer');
 const path = require('path');
 const withCSS = require('@zeit/next-css');
@@ -39,7 +37,7 @@ const config = {
   cssModules: true,
   cssLoaderOptions: {
     importLoaders: true,
-    localIdentName: IS_DEV_MODE ? '[local]___[hash:base64:5]' : '[hash:base64:5]',
+    localIdentName: IS_DEV_MODE ? '[local]' : '[hash:base64:5]',
   },
   stylusLoaderOptions: {
     import: COMMON_STYES,

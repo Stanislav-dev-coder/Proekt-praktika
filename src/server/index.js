@@ -1,9 +1,7 @@
-require('dotenv').config();
-
 const path = require('path');
 const next = require('next');
 const express = require('express');
-const getRequestHandler = require('../utils/router/getRequestHandler');
+const getRequestHandler = require('../modules/ch/next-router/getRequestHandler');
 const routes = require('./routes');
 
 const PUBLIC_PATH = path.join(__dirname, '../public');
