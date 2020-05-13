@@ -1,0 +1,27 @@
+version: "3.5"
+
+networks:
+  backend-network:
+    external:
+      name: "${BACKEND_NETWORK_NAME}"
+
+services:
+  # Nextjs applicaton container
+  &app-service app: &app-service-template
+    image: ci.chulakov.ru:5000/chulakov/node:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    container_name: ${COMPOSE_PROJECT_NAME}-node
+    environment: &app-service-envs
+      VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
+      API_URL: "${API_URL}"
+      PORT: "${PORT}"
+      NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
+    working_dir: "/app"
+    volumes:
+      - ./../../src:/app:rw
+    networks:
+      - backend-network

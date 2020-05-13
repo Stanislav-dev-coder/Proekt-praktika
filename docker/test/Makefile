@@ -9,6 +9,7 @@ IMAGES_PREFIX := $(shell basename $(shell dirname $(realpath $(lastword $(MAKEFI
 # Important: Local images naming should be in docker-compose naming style
 
 APP_CONTAINER_NAME := app
+NODE_CONTAINER_NAME := node
 NGINX_CONTAINER_NAME := nginx-app
 
 docker_bin := $(shell command -v docker 2> /dev/null)
@@ -26,7 +27,7 @@ help: ## Show this help
 # --- [ Development tasks ] -------------------------------------------------------------------------------------------
 
 up:
-	$(docker_compose_bin) up -d
+	$(docker_compose_bin) up --no-recreate -d
 
 down: ## Stop all started for development containers
 	$(docker_compose_bin) down
@@ -35,13 +36,13 @@ shell: ## Start shell into application container
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" /bin/sh
 
 install: ## Install dependency
-	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn install --non-interactive --ignore-optional --frozen-lockfile
+	$(docker_compose_bin) exec "$(NODE_CONTAINER_NAME)" yarn install --global-folder /tmp/ --cache-folder /tmp/ --non-interactive --ignore-optional --frozen-lockfile
 
 build: install ## Build
-	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn build
+	$(docker_compose_bin) -f ./docker-compose-build.yml run --workdir="/app" --service-ports --rm "$(NODE_CONTAINER_NAME)" yarn build
 
-prod: build ## Start production server
-	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn start
+start: build ## Start production server
+	$(docker_compose_bin) -f ./docker-compose-build.yml run --workdir="/app" --service-ports --rm "$(NODE_CONTAINER_NAME)" yarn start
 
 dev: up ## Node dev frontend
 	$(docker_compose_bin) exec "$(APP_CONTAINER_NAME)" yarn dev
