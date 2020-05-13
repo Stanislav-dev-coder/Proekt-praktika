@@ -60,6 +60,7 @@ pipeline {
                     docker run \
                         -itd \
                         --name="${VIRTUAL_HOST}-app" \
+                        --restart=on-failure:10 \
                         --workdir="/app" \
                         --user=${UID}:${GID} \
                         --log-driver=json-file \
@@ -78,6 +79,7 @@ pipeline {
                     docker run \
                         -itd \
                         --name="${VIRTUAL_HOST}-nginx" \
+                        --restart=on-failure:10 \
                         --log-driver=json-file \
                         --log-opt max-file=2 \
                         --log-opt max-size=5m \
