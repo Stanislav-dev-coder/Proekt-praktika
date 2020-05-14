@@ -10,7 +10,7 @@ networks:
 
 services:
   # Nextjs applicaton container
-  &app-service app: &app-service-template
+  &app-service app:
     image: ci.chulakov.ru:5000/chulakov/node:latest
     logging:
       driver: "json-file"
@@ -19,10 +19,10 @@ services:
         max-size: "5m"
     container_name: ${COMPOSE_PROJECT_NAME}-app
     restart: always
-    environment: &app-service-envs
+    environment:
       API_URL: "${API_URL}"
       NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
-      PORT: 3000
+      PORT: &nodejs-port 3000
     command: ["yarn", "start"]
     working_dir: "/app"
     volumes:
@@ -31,7 +31,7 @@ services:
       - backend-network
 
   # NGINX container with proxy
-  nginx-app: &nginx-service-template
+  nginx-app:
     image: ci.chulakov.ru:5000/chulakov/nginx-proxy:latest
     logging:
       driver: "json-file"
@@ -44,7 +44,7 @@ services:
       - *app-service
     environment:
       REMOTE_HOST: ${COMPOSE_PROJECT_NAME}-app
-      REMOTE_HOST: 3000
+      REMOTE_PORT: *nodejs-port
       ROOT_DIR: "/app"
       VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
       LETSENCRYPT_HOST: "${COMPOSE_PROJECT_NAME}"
