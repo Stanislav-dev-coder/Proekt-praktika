@@ -45,6 +45,7 @@ services:
       REMOTE_HOST: ${COMPOSE_PROJECT_NAME}-app
       ROOT_DIR: "/app"
       VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
+      LETSENCRYPT_HOST: "${COMPOSE_PROJECT_NAME}"
     volumes:
       - ./../../src:/app:ro
     networks:
