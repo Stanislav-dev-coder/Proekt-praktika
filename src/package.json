@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "node server/index.js",
-    "inspect": "node --inspect=0.0.0.0 server/index.js",
+    "inspect": "node --inspect=0.0.0.0:${INSPECT_PORT:-9229} server/index.js",
     "test": "jest --config ./jest.config.json",
     "build": "NODE_ENV=production next build",
     "analyzer": "NODE_ENV=production ANALYZER=1 yarn build",
