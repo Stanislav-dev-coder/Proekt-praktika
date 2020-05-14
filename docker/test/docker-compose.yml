@@ -22,6 +22,7 @@ services:
     environment: &app-service-envs
       API_URL: "${API_URL}"
       NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
+      PORT: 3000
     command: ["yarn", "start"]
     working_dir: "/app"
     volumes:
@@ -43,6 +44,7 @@ services:
       - *app-service
     environment:
       REMOTE_HOST: ${COMPOSE_PROJECT_NAME}-app
+      REMOTE_HOST: 3000
       ROOT_DIR: "/app"
       VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
       LETSENCRYPT_HOST: "${COMPOSE_PROJECT_NAME}"
