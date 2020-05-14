@@ -18,16 +18,11 @@ services:
         max-file: "2"
         max-size: "5m"
     container_name: ${COMPOSE_PROJECT_NAME}-app
-    restart: on-failure
+    restart: always
     environment: &app-service-envs
       API_URL: "${API_URL}"
-      PORT: "${PORT}"
       NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
-      INSPECT_PORT: "${INSPECT_PORT}"
-    # for keep alive container
-    command: ["tail", "-f", "/dev/null"]
-    ports:
-      - "${INSPECT_PORT}:${INSPECT_PORT}"
+    command: ["yarn", "start"]
     working_dir: "/app"
     volumes:
       - ./../../src:/app:rw
@@ -43,18 +38,15 @@ services:
         max-file: "2"
         max-size: "5m"
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
-    restart: on-failure
+    restart: always
     depends_on:
       - *app-service
     environment:
       REMOTE_HOST: ${COMPOSE_PROJECT_NAME}-app
-      REMOTE_PORT: "${PORT}"
       ROOT_DIR: "/app"
       VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
     volumes:
       - ./../../src:/app:ro
-    ports:
-      - "${PORT}:80"
     networks:
       - backend-network
       - frontend-network

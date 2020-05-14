@@ -16,9 +16,7 @@ services:
         max-size: "5m"
     container_name: ${COMPOSE_PROJECT_NAME}-node
     environment: &app-service-envs
-      VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
       API_URL: "${API_URL}"
-      PORT: "${PORT}"
       NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
     working_dir: "/app"
     volumes:
