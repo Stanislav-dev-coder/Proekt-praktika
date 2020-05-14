@@ -7,14 +7,13 @@ networks:
 
 services:
   # Nextjs applicaton container
-  &app-service app: &app-service-template
+  &app-service node: &app-service-template
     image: ci.chulakov.ru:5000/chulakov/node:latest
     logging:
       driver: "json-file"
       options:
         max-file: "2"
         max-size: "5m"
-    container_name: ${COMPOSE_PROJECT_NAME}-node
     environment: &app-service-envs
       API_URL: "${API_URL}"
       NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
