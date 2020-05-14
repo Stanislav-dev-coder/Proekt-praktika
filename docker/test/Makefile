@@ -33,7 +33,7 @@ down: ## Stop all started for development containers
 	$(docker_compose_bin) down
 
 install: ## Install dependency
-	$(docker_compose_bin) -f ./docker-compose-build.yml "$(NODE_CONTAINER_NAME)" yarn install --non-interactive --ignore-optional --frozen-lockfile
+	$(docker_compose_bin) -f ./docker-compose-build.yml run --workdir="/app" --service-ports --rm "$(NODE_CONTAINER_NAME)" yarn install --non-interactive --ignore-optional --frozen-lockfile
 
 build: ## Build
 	$(docker_compose_bin) -f ./docker-compose-build.yml run --workdir="/app" --service-ports --rm "$(NODE_CONTAINER_NAME)" yarn build
