@@ -1,4 +1,4 @@
-const initRoutes = require('../utils/router/initRoutes');
+const initRoutes = require('../modules/ch/next-router/initRoutes');
 
 module.exports = initRoutes(process.env.ASSET_PREFIX, {
   '/': '/home',

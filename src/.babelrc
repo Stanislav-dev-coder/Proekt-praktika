@@ -44,7 +44,10 @@
           "store": "./store",
           "locales": "./locales",
           "static": "./static",
-          "@utils": "./utils"
+          "types": "./types",
+          "constants": "./constants",
+          "@ch": "./modules/ch",
+          "@project": "./modules/project"
         }
       }
     ]

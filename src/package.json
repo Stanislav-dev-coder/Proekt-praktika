@@ -11,8 +11,7 @@
     "start": "NODE_ENV=production node server/index.js",
     "precommit": "npx lint-staged",
     "eslint": "npx eslint --quiet -c ./.eslintrc.json --color \"./**/*.{js,jsx}\"",
-    "@router/test": "jest -c ./utils/router/jest.config.js",
-    "@helpers/test": "jest -c ./utils/helpers/jest.config.js"
+    "storybook": "start-storybook"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -47,13 +46,13 @@
     "animejs": "^3.1.0",
     "autoprefixer": "^9.7.1",
     "axios": "^0.19.2",
+    "babel-loader": "^8.1.0",
     "babel-plugin-inline-react-svg": "^1.0.1",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "classnames": "^2.2.6",
     "core-js": "^3.6.1",
     "csso-webpack-plugin": "^1.0.0-beta.12",
-    "dotenv": "^7.0.0",
     "express": "^4.16.3",
     "file-loader": "^3.0.1",
     "memoizee": "^0.4.14",
@@ -76,6 +75,12 @@
     "url-loader": "^1.0.1"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-docs": "^5.3.18",
+    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-viewport": "^5.3.18",
+    "@storybook/react": "^5.3.18",
+    "@storybook/source-loader": "^5.3.18",
     "babel-eslint": "^10.0.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",

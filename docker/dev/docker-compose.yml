@@ -1,0 +1,51 @@
+version: '3.2'
+
+networks:
+  backend-network:
+    driver: bridge
+  web-projects:
+    external:
+       name: ${EXTERNAL_NETWORK_NAME}
+
+services:
+  # Nextjs applicaton container
+  &app-service app: &app-service-template
+    image: ci.chulakov.ru:5000/chulakov/node:latest
+    user: ${UID}:${GID}
+    environment: &app-service-envs
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      API_URL: "${API_URL}"
+      PORT: "${PORT}"
+      NEXT_TELEMETRY_DISABLED: "${NEXT_TELEMETRY_DISABLED}"
+    # for keep alive container
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ./../../src:/app:rw
+    container_name: ${VIRTUAL_HOST}-app
+    working_dir: "/app"
+    ports: ["${PORT}:${PORT}", "9229:9229"]
+    networks:
+      - backend-network
+      - web-projects
+
+  # NGINX container with proxy
+  nginx-app: &nginx-service-template
+    image: ci.chulakov.ru:5000/chulakov/nginx-proxy:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    restart: on-failure
+    container_name: ${VIRTUAL_HOST}-nginx
+    environment:
+      REMOTE_HOST: ${VIRTUAL_HOST}-app
+      REMOTE_PORT: "${PORT}"
+      ROOT_DIR: '/app'
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      LETSENCRYPT_HOST: "${VIRTUAL_HOST}"
+    volumes:
+      - ./../../src:/app:ro
+#    ports: ['9991:80']
+    networks:
+      - web-projects
