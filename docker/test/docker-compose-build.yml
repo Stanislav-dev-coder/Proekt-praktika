@@ -8,7 +8,7 @@ networks:
 services:
   # Nextjs applicaton container
   &app-service node: &app-service-template
-    image: ci.chulakov.ru:5000/chulakov/node:latest
+    image: node:12-alpine
     logging:
       driver: "json-file"
       options:

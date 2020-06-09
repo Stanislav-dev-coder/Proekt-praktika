@@ -11,7 +11,7 @@ networks:
 services:
   # Nextjs applicaton container
   &app-service app: &app-service-template
-    image: ci.chulakov.ru:5000/chulakov/node:latest
+    image: node:12-alpine
     logging:
       driver: "json-file"
       options:
@@ -36,7 +36,7 @@ services:
 
   # NGINX container with proxy
   nginx-app: &nginx-service-template
-    image: ci.chulakov.ru:5000/chulakov/nginx-proxy:latest
+    image: git.chulakov.org:5555/docker/compose/images/nginx:1.17-1.0.0-proxy
     logging:
       driver: "json-file"
       options:
