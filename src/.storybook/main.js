@@ -2,7 +2,7 @@ const path = require('path');
 const poststylus = require('poststylus');
 
 module.exports = {
-  stories: ['../components/**/*.stories.js'],
+  stories: ['../components/**/*.stories.jsx'],
   addons: ['@storybook/addon-docs', '@storybook/addon-knobs/register', '@storybook/addon-actions/register', '@storybook/addon-viewport/register'],
   webpackFinal: async (config) => {
     config.module.rules.push({
