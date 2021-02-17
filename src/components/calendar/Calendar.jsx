@@ -1,49 +1,79 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
-import FlexDate from './FlexDate.jsx';
-import 'react-calendar/dist/Calendar.css';
+// import 'react-calendar/dist/Calendar.css';
 import { array } from 'prop-types';
+
+// import './calendar.styl'
+
 
 
 const MyCalendar = () => {
   const [date, setDate] = useState(new Date());
-  const [firsDay, setFirst] = useState('')
+  const [check, setCheck] = useState(false);
+
+  const [day, setDay] = useState('')
+  const [firstDay, setFirst] = useState('')
   const [lastDay, setLast] = useState('')
-  let today, day
+  const [firstMonth, setFirstMonth] = useState('')
+  const [lastMonth, setLastMonth] = useState('')
+  const month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+              'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',]
+  let today
 
   const onChange = date => {
     setDate(date);
+    const addDate = () => {
+      if (check === false) {
+        today = date.getDate()
+        setDay(date.setDate(today))
+        setDay(date.getDate()) 
+        date.setDate(today)
+        console.log(day)
+      } else {
+        today = date.getDate()
+        setDay(date.setDate(today)) 
+        setFirst(date.setDate(today-3)) 
+        setFirst(date.getDate())
+        setFirstMonth(month[date.getMonth()])
+        date.setDate(today)
+        console.log(firstDay)
+        console.log(firstMonth)
+
+        setLast(date.setDate(today+3))
+        setLast(date.getDate())
+        setLastMonth(month[date.getMonth()])
+        date.setDate(today)
+        console.log(lastDay)
+        console.log(lastMonth)
+      }
+    }
     addDate();
   }
 
-  const addDate = () => {
-    today = date.getDate()
-    day = date.setDate(today)
-    day = date.getDate()
-    date.setDate(today)
-    console.log(day)
-    
-    setFirst(date.setDate(today-3)) 
-    setFirst(date.getDate())
-    date.setDate(today)
-    console.log(firsDay)
 
-    setLast(date.setDate(today+3))
-    setLast(date.getDate())
-    date.setDate(today)
-    console.log(lastDay)
-  }
 
 
   return (
     <div>
-      <Calendar onChange={onChange} value={date}/>
+      <Calendar minDate={new Date()} onChange={onChange} value={date}/>
 
-      <FlexDate/>
       
-      <input type="text" value={'C ' + firsDay + ' по ' + lastDay}/>
+      
+      <input type="checkbox" onChange={() => {
+        setCheck(!check)
+        
+        }}/>
+      <span> ± 3 дня (гибкие даты)</span>
+      {console.log(check)}
+      {check ? (
+        <input type="text" value={'C ' + firstDay + ' ' + firstMonth + ' по ' + lastDay + ' ' + lastMonth}/>
+      ) : (
+        <input type="text" value={ day + ' ' + month[date.getMonth()]}/>
+      )}
+      
     </div>
   );
 }
+
 
 export default MyCalendar
